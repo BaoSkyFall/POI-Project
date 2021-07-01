@@ -1,0 +1,9 @@
+.col-left{
+    height: 100%;
+    float: left;
+    position: fixed;
+}
+
+.col-right{
+    float: right;
+}

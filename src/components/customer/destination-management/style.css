@@ -1,0 +1,8 @@
+th.column-money,
+td.column-money {
+  text-align: right !important;
+}
+
+.transaction-history .ant-spin {
+  height: 50vh !important;
+}

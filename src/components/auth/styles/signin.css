@@ -1,0 +1,17 @@
+.form-signin {
+    max-width: 300px;
+    margin: 0 auto;
+    padding-top: 1%;
+}
+
+.form-signin-forgot {
+    float: right;
+}
+
+.form-signin-button {
+    width: 100%;
+}
+
+.ant-spin {
+    height: 50% !important;
+}

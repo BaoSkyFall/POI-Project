@@ -1,0 +1,13 @@
+.left{
+    float: left;
+    width: 30%;
+}
+
+.right{
+    float: right;
+    width: 70%;
+}
+
+.ant-row{
+    margin-bottom: 2%;
+}
