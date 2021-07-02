@@ -10,6 +10,17 @@ export const MENUITEM = {
     TRANSACTION_HISTORY: 'transaction-history',
     SAVING: 'saving',
     CLOSE_WALLET: 'close-wallet',
+
+
+    DESTINATION_MANAGEMENT: 'destination-management',
+    DESTINATION_TYPE: 'destination-type',
+    HASHTAG: 'hashtag',
+    POI_MANAGEMENT: 'poi-management',
+    POI_TYPE: 'poi-type',
+    TRIP: 'trip',
+    USER: 'user',
+    VISIT: 'visit',
+    VOTE: 'vote',
 };
 
 export const OTP_EMAIL = 'otp-email';

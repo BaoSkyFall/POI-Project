@@ -39,7 +39,7 @@ class ModalTransfer extends React.Component {
 
         const { accessToken, email } = this.props;
         console.log('amount:', amount)
-        let decode = jwt(accessToken);
+        let decode = jwt(accessToken) || {};
         if (otp) {
 
             console.log('data123355:', this.props.data)
@@ -80,7 +80,7 @@ class ModalTransfer extends React.Component {
     }
     onClickSendOTP = (e) => {
         let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY)
-        let decode = jwt(accessToken);
+        let decode = jwt(accessToken) || {};
         const { getOTP } = this.props;
         getOTP(decode.email, accessToken);
     }

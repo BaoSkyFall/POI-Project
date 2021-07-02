@@ -75,13 +75,13 @@ class TransactionHistory extends React.Component {
         this.setState({
             isAll: value
         })
-        let decode = jwt(accessToken)
+        let decode = jwt(accessToken) || {}
         this.props.fetchTransactionHistoryLocal(decode.userId, accessToken,value);
         
       }
     componentDidMount() {
         const { accessToken, isAll } = this.state;
-        let decode = jwt(accessToken)
+        let decode = jwt(accessToken) || {}
         this.props.fetchTransactionHistoryLocal(decode.userId, accessToken,isAll);
 
         // fetch(`${URL_SERVER}/user/me`, {

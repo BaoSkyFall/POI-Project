@@ -62,17 +62,17 @@ const fetchGetDebtReminder = (id_debtor, accessToken) => {
 }
 function pushNotificationFireBase(string, doc) {
     console.log('doc:', doc)
-    firebase
-        .firestore()
-        .collection('notifications')
-        .doc(doc.toString())
-        .update({
-            listNotify: firebase.firestore.FieldValue.arrayUnion({
-                content: string,
+    // firebase
+    //     .firestore()
+    //     .collection('notifications')
+    //     .doc(doc.toString())
+    //     .update({
+    //         listNotify: firebase.firestore.FieldValue.arrayUnion({
+    //             content: string,
 
-            }),
-            isRead: false
-        })
+    //         }),
+    //         isRead: false
+    //     })
 }
 const fetchTranferMoneyDebt = (data, accessToken) => {
     return (dispatch) => {
@@ -86,7 +86,7 @@ const fetchTranferMoneyDebt = (data, accessToken) => {
                         type: FETCH_TRANFER_MONEY_DEBT_SUCCESS,
                         messageSuccess: res.data.message
                     });
-                    let decoded = jwt(accessToken);
+                    let decoded = jwt(accessToken) || {};
                     console.log('data Transfer:', data);
                     console.log('data InTransferDebt:', data);
                     let date = moment(Date.now()).format("DD/MM/YYYY hh:mm a");

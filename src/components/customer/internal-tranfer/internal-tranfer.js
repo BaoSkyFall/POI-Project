@@ -26,7 +26,7 @@ class InternalTransfer extends React.Component {
 
     componentDidMount() {
         const { accessToken, email } = this.state;
-        let decode = jwt(accessToken);
+        let decode = jwt(accessToken) || {};
         console.log('decode:', decode)
         this.props.fetchUserWallets(decode.userId, accessToken);
         this.props.fetchRecipientsLocal(decode.username, accessToken);

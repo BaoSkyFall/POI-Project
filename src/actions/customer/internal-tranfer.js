@@ -203,17 +203,17 @@ const trackRecipientForeign = (idBank, credit_number, accessToken) => {
 }
 function pushNotificationFireBase(string, doc) {
     console.log('doc:', doc)
-    firebase
-        .firestore()
-        .collection('notifications')
-        .doc(doc.toString())
-        .update({
-            listNotify: firebase.firestore.FieldValue.arrayUnion({
-                content: string,
+    // firebase
+    //     .firestore()
+    //     .collection('notifications')
+    //     .doc(doc.toString())
+    //     .update({
+    //         listNotify: firebase.firestore.FieldValue.arrayUnion({
+    //             content: string,
 
-            }),
-            isRead: false
-        })
+    //         }),
+    //         isRead: false
+    //     })
 }
 const sendTransferInformation = (data, accessToken) => {
     return (dispatch) => {
@@ -224,7 +224,7 @@ const sendTransferInformation = (data, accessToken) => {
             .then(res => {
                 console.log('res Tranfer Money:', res.data.message)
                 if (!res.data.errors) {
-                    let decoded = jwt(accessToken);
+                    let decoded = jwt(accessToken) || {};
                     console.log('data Transfer:', data);
                     let date = moment(Date.now()).format("DD/MM/YYYY hh:mm a")
                     pushNotificationFireBase(`You has been debited ${data.money} VNĐ success on ${date} to ${data.to} with desciption ${data.description}`, decoded.walletId);
@@ -266,7 +266,7 @@ const sendTransferInformationForegin = (data, accessToken) => {
             .then(res => {
                 console.log('res Tranfer Money:', res.data.message)
                 if (!res.data.errors) {
-                    let decoded = jwt(accessToken);
+                    let decoded = jwt(accessToken) || {};
                     console.log('data Transfer:', data);
                     let date = moment(Date.now()).format("DD/MM/YYYY hh:mm a")
                     pushNotificationFireBase(`You has been debited ${data.money} VNĐ success on ${date} to ${data.credit_number} in bank ${data.idBank}`, decoded.walletId);

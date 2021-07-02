@@ -131,7 +131,7 @@ class SetupRecipient extends React.Component {
         const { accessToken } = this.state;
         const { fetchRecipients } = this.props
 
-        let decoded = jwt(accessToken);
+        let decoded = jwt(accessToken) || {};
         console.log('decode:', decoded)
         // fetchRecipients(decode.username, accessToken);
         // this.props.fetchRecipients(decoded.username,accessToken);
@@ -144,12 +144,12 @@ class SetupRecipient extends React.Component {
         const { deleteRecipient, recipients } = this.props
         console.log('record:', record)
         this.props.deleteRecipient(record, recipients, accessToken);
-        let decode = jwt(accessToken);
+        let decode = jwt(accessToken) || {};
     }
 
     handleSave = (row) => {
         const { accessToken, email } = this.state;
-        let decoded = jwt(accessToken);
+        let decoded = jwt(accessToken) || {};
         const newData = this.props.recipients;
         const index = newData.findIndex(item => row.walletId === item.walletId);
         const { updateRecipient, recipients } = this.props
@@ -166,7 +166,7 @@ class SetupRecipient extends React.Component {
 
     componentDidMount() {
         const { accessToken, email } = this.state;
-        let decode = jwt(accessToken);
+        let decode = jwt(accessToken) || {};
         console.log('decode:', decode)
         this.props.fetchRecipients(decode.username, accessToken);
         

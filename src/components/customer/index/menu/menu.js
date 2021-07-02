@@ -2,18 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Button } from 'antd';
 import {
-    WalletOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    SwapOutlined,
-    UserSwitchOutlined,
     LogoutOutlined,
-    FormOutlined,
-    CreditCardOutlined,
-    DollarCircleOutlined
+    AppstoreOutlined,
+    ControlOutlined,
+    TagOutlined,
+    CheckCircleOutlined,
+    FlagOutlined,
+    UserOutlined,
+    EyeOutlined
 } from '@ant-design/icons';
 import { MENUITEM } from '../../../../configs/client';
 import './menu.css';
+const { SubMenu } = Menu;
 
 class MenuLeft extends React.Component {
     constructor(props, context) {
@@ -70,11 +70,12 @@ class MenuLeft extends React.Component {
                 mode="inline"
                 theme="dark"
                 inlineCollapsed={this.state.collapsed}
+                defaultOpenKeys={['sub1']}
             >
                 {/* <Button type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 16 }}>
                     {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}
                 </Button> */}
-                <Menu.Item key="1" icon={<WalletOutlined />} >
+                {/* <Menu.Item key="1" icon={<WalletOutlined />} >
                     <Link to={MENUITEM.PAYMENT_ACCOUNTS} >
                         <span>Dashboard</span>
                     </Link>
@@ -106,7 +107,80 @@ class MenuLeft extends React.Component {
                     <Link to="/" >
                         <span>Logout</span>
                     </Link>
+                </Menu.Item> */}
+                <SubMenu key="sub1" icon={<AppstoreOutlined />} title="Destination">
+                    <Menu.Item key="1">
+                        <Link to={MENUITEM.DESTINATION_MANAGEMENT} >
+                            <span>Destination Management</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="2">
+                        <Link to={MENUITEM.DESTINATION_TYPE} >
+                            <span>Destination Type Management</span>
+                        </Link>
+                    </Menu.Item>
+                </SubMenu>
+                <SubMenu key="sub2" icon={<ControlOutlined />} title="POI">
+                    <Menu.Item key="3">
+                        <Link to={MENUITEM.POI_MANAGEMENT} >
+                            <span>POI Management</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="4">
+                        <Link to={MENUITEM.POI_TYPE} >
+                            <span>POI Type Management</span>
+                        </Link>
+
+                    </Menu.Item>
+                </SubMenu>
+                <Menu.Item key="5" icon={<TagOutlined />}>
+                    <Link to={MENUITEM.HASHTAG} >
+                        <span>Hashtag</span>
+                    </Link>
                 </Menu.Item>
+                <Menu.Item key="6" icon={<FlagOutlined />}>
+                    <Link to={MENUITEM.TRIP} >
+                        <span>Trip Management</span>
+                    </Link>
+                </Menu.Item>
+                <Menu.Item key="7" icon={<UserOutlined />}>
+                    <Link to={MENUITEM.USER} >
+                        <span>User Management</span>
+                    </Link>
+                </Menu.Item>
+                <Menu.Item key="8" icon={<EyeOutlined />}>
+                    <Link to={MENUITEM.VISIT} >
+                        <span> Visit Management</span>
+                    </Link>
+                </Menu.Item>
+                <Menu.Item key="9" icon={<CheckCircleOutlined />}>
+                    <Link to={MENUITEM.VOTE} >
+                        <span>Vote  Management</span>
+                    </Link>
+                </Menu.Item>
+                <Menu.Item key="10" icon={<LogoutOutlined />}>
+                    <Link to="/" >
+                        <span>Logout</span>
+                    </Link>
+                </Menu.Item>
+                {/* <Menu.Item key="5">
+                    <Link to={MENUITEM.CLOSE_WALLET} >
+                        <Icon type="tags" />
+                        <span>Hashtag</span>
+                    </Link>
+                </Menu.Item>
+                <Menu.Item key="5">
+                    <Link to={MENUITEM.CLOSE_WALLET} >
+                        <Icon type="tags" />
+                        <span>Hashtag</span>
+                    </Link>
+                </Menu.Item> <Menu.Item key="5">
+                    <Link to={MENUITEM.CLOSE_WALLET} >
+                        <Icon type="tags" />
+                        <span>Hashtag</span>
+                    </Link>
+                </Menu.Item> */}
+
             </Menu>
         );
     }

@@ -66,7 +66,7 @@ const doSignIn = (infoUser) => {
 
     console.log("infoUser:", infoUser);
 
-    fetch(`${URL_SERVER}/api/auth/login`, {
+    fetch(`${URL_SERVER}/api/login`, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",

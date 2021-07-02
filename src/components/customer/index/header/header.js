@@ -13,13 +13,13 @@ const firebase = require("firebase");
 class HeaderPage extends Component {
     pushIsReadNotification() {
         let decode = jwt(localStorage.getItem(ACCESS_TOKEN_KEY));
-        firebase
-            .firestore()
-            .collection('notifications')
-            .doc(decode.walletId.toString())
-            .update({
-                isRead: true
-            })
+        // firebase
+        //     .firestore()
+        //     .collection('notifications')
+        //     .doc(decode.walletId.toString())
+        //     .update({
+        //         isRead: true
+        //     })
     }
     render() {
         let decode = jwt(localStorage.getItem(ACCESS_TOKEN_KEY));
@@ -41,7 +41,7 @@ class HeaderPage extends Component {
             <Header className="header">
                 <div className="logo" />
                 <Row>
-                    <Col className="nameBank" span={3} offset={1}><h3><BuildOutlined style={{ fontSize: '25px', marginRight: '5px', fontWeight: 'bold' }} />Bảo Bình Đạt Bank</h3></Col>
+                    <Col className="nameBank" span={3} offset={1}><h3><BuildOutlined style={{ fontSize: '25px', marginRight: '5px', fontWeight: 'bold' }} />POI Project</h3></Col>
                     <Col span={3} offset={13} style={{ color: 'white' }}>
                         <Dropdown placement="bottomCenter" overlay={menu} trigger={['click']}>
 

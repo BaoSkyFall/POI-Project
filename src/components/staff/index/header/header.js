@@ -14,7 +14,7 @@ class HeaderPage extends Component {
             <Header className="header">
                 <div className="logo" />
                 <Row>
-                <Col className="nameBank" span={3} offset={1}><h3><BuildOutlined style={{fontSize:'25px',marginRight:'5px',fontWeight:'bold'}}/>Bảo Bình Đạt Bank</h3></Col>
+                <Col className="nameBank" span={3} offset={1}><h3><BuildOutlined style={{fontSize:'25px',marginRight:'5px',fontWeight:'bold'}}/>POI Project</h3></Col>
                     <Col clasName="" span={3} offset={17} style={{ color: 'white' }}>
                         <span style={{ marginLeft: '7px', fontSize: '18px' }}> Hello Bảo</span>
                     </Col>

@@ -22,7 +22,7 @@ class ModalAddRecipient extends React.Component {
             this.formRef1.current.validateFields().then(values => {
                 let { walletNumber, remindName } = values;
                 remindName = remindName ? remindName : '';
-                let decoded = jwt(accessToken);
+                let decoded = jwt(accessToken) || {};
                 console.log('decoded:', decoded)
                 console.log('remindName:', remindName)
                 this.props.addRecipientLocal(decoded.username, walletNumber, remindName, usernameRecipient, isLocalRecipient, accessToken);
@@ -34,7 +34,7 @@ class ModalAddRecipient extends React.Component {
                 console.log('values:Foregin Add', values)
                 let { walletNumber, remindName, bankRecipient } = values;
                 remindName = remindName ? remindName : '';
-                let decoded = jwt(accessToken);
+                let decoded = jwt(accessToken) || {};
                 console.log('decoded:', decoded)
                 console.log('remindName:', remindName)
                 this.props.addRecipientForeign(decoded.username, walletNumber, remindName, bankRecipient, isLocalAdd, accessToken);

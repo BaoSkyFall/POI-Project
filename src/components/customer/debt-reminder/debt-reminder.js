@@ -149,7 +149,7 @@ class DebtReminder extends React.Component {
         const { isAction, name, messageError, data, visiblePayDebt } = this.props;
         if (isAction) {
             const { accessToken, email } = this.state;
-            var decoded = jwt(accessToken);
+            var decoded = jwt(accessToken) || {};
             this.props.fetchGetDebtReminder(decoded.userId, accessToken)
             this.props.fetchGetDebtOwner(decoded.userId, accessToken);
             this.props.handleCancelModal();
@@ -184,7 +184,7 @@ class DebtReminder extends React.Component {
     }
     componentDidMount() {
         const { accessToken, email } = this.state;
-        var decoded = jwt(accessToken);
+        var decoded = jwt(accessToken) || {};
         this.props.fetchGetDebtReminder(decoded.userId, accessToken)
         this.props.fetchGetDebtOwner(decoded.userId, accessToken)
         // this.props.showPayDebtModal({});
@@ -233,7 +233,7 @@ class DebtReminder extends React.Component {
             confirmLoading: true,
         });
         let data = this.formRef.current.getFieldsValue()
-        var decoded = jwt(accessToken);
+        var decoded = jwt(accessToken) || {};
         console.log('decoded:', decoded);
         let dt = {
             id_debtor: idDebtor,
@@ -253,7 +253,7 @@ class DebtReminder extends React.Component {
         const { accessToken, email } = this.state;
         const { data, fetchTranferMoneyDebt } = this.props
         const otp = this.inputRef.current.state.value;
-        let decoded = jwt(accessToken);
+        let decoded = jwt(accessToken) || {};
 
         if (data && otp) {
             data.otp = otp;
@@ -266,7 +266,7 @@ class DebtReminder extends React.Component {
     }
     onClickSendOTP = (e) => {
         let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY)
-        let decode = jwt(accessToken);
+        let decode = jwt(accessToken) || {};
         const { getOTP } = this.props;
         getOTP(decode.email, accessToken);
     }
