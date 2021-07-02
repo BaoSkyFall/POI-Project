@@ -1,11 +1,12 @@
 import React from 'react';
-import { Table, Button, notification, Icon, Spin } from 'antd';
+import { Table, Button, Tag, notification, Icon, Spin } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
+import { WarningOutlined } from '@ant-design/icons';
 
 class UsersManagement extends React.Component {
     constructor(props) {
@@ -36,28 +37,33 @@ class UsersManagement extends React.Component {
             defaultSortOrder: 'descend',
             width: '20%',
             sorter: (a, b) => a.lastName.localeCompare(b.lastName),
-        }, 
+        },
         {
             title: 'Email',
             dataIndex: 'email',
             defaultSortOrder: 'descend',
             width: '20%',
             sorter: (a, b) => a.email.localeCompare(b.email),
-        }, 
+        },
         {
             title: 'Phone',
             dataIndex: 'phone',
             defaultSortOrder: 'descend',
             width: '20%',
             sorter: (a, b) => a.phone.localeCompare(b.phone),
-        }, 
+        },
         {
             title: 'Status',
             dataIndex: 'status',
             defaultSortOrder: 'descend',
             width: '20%',
             sorter: (a, b) => a.status.localeCompare(b.status),
-        }, 
+            render: (status) => (
+                <Tag color={status === 1 ? 'green' : 'volcano'} key={status === 1 ? 'Active' : 'Inactive'} size="middle">
+                    {status === 1 ? 'Active' : 'Inactive'}
+                </Tag>
+            ),
+        },
         {
             title: 'Action',
             className: 'column-money',
@@ -74,34 +80,35 @@ class UsersManagement extends React.Component {
     }
 
     componentDidMount() {
-        const { accessToken, email } = this.state;
-        this.props.fetchTransactionHistory(email, accessToken);
+        const { accessToken } = this.state;
+        this.props.fetchAllUsers(accessToken);
 
-        fetch(`${URL_SERVER}/user/me`, {
-            headers: {
-                x_accesstoken: accessToken
-            }
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.status === 200) {
-                    localStorage.setItem(EMAIL_KEY, res.data.email)
-                    localStorage.setItem('role', res.data.role)
-                    if (res.data.role !== 'customer')
-                        window.location.href = '/signin';
-                }
-                else {
-                    localStorage.removeItem(ACCESS_TOKEN_KEY);
-                    localStorage.removeItem(EMAIL_KEY);
-                    localStorage.removeItem('role');
-                    window.location.href = '/signin';
-                }
-            })
+        // fetch(`${URL_SERVER}/user/me`, {
+        //     headers: {
+        //         x_accesstoken: accessToken
+        //     }
+        // })
+        //     .then(res => res.json())
+        //     .then(res => {
+        //         console.log('res:', res)
+        //         // if (res.status === 200) {
+        //         //     localStorage.setItem(EMAIL_KEY, res.data.email)
+        //         //     localStorage.setItem('role', res.data.role)
+        //         //     if (res.data.role !== 'customer')
+        //         //         window.location.href = '/signin';
+        //         // }
+        //         // else {
+        //         //     localStorage.removeItem(ACCESS_TOKEN_KEY);
+        //         //     localStorage.removeItem(EMAIL_KEY);
+        //         //     localStorage.removeItem('role');
+        //         //     window.location.href = '/signin';
+        //         // }
+        //     })
     }
 
     render() {
-        const { isLoading, transactionHistory, messageError } = this.props;
-
+        const { isLoading, messageError, listUsers } = this.props;
+        console.log('listUsers:', listUsers)
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
             return (<Redirect to={{
@@ -114,12 +121,12 @@ class UsersManagement extends React.Component {
                 {messageError ?
                     notification.open({
                         message: messageError,
-                        icon: <Icon type="warning" style={{ color: 'red' }} />,
+                        icon: <WarningOutlined style={{ color: 'red' }} />,
                     }) : null}
 
                 <Table
                     columns={this.columns}
-                    dataSource={formatTransaction(transactionHistory)}
+                    dataSource={listUsers}
                     onChange={this.handleChange}
                     pagination={{ pageSize: 10 }}
                     scroll={{ y: '60vh' }}

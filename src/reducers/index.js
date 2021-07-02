@@ -5,7 +5,7 @@ import setupRecipientReducer from "./customer/setup-recipient";
 import internalTransferReducer from "./customer/internal-tranfer";
 import transactionHistoryReducer from "./customer/transaction-history";
 import debtReminderReducer from "./customer/debt-reminder";
-
+import userManagementReducer from "./customer/users-management";
 import authReducer from "./auth";
 import forgetPasswordReducer from "./forget-password";
 
@@ -26,4 +26,7 @@ export default combineReducers({
   authReducer,
   accountUser,
   rechargeReducer,
+
+
+  userManagementReducer
 });

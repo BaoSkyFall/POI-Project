@@ -100,7 +100,7 @@ class SignInForm extends React.Component {
         <br />
         <Form
           initialValues={{
-            username: "admin@gmail.com",
+            email: "admin@gmail.com",
             password: "admin",
             something: "1234",
           }}
@@ -108,17 +108,17 @@ class SignInForm extends React.Component {
           onFinishFail={this.onFinishFail}
         >
           <FormItem
-            name="username"
+            name="email"
             rules={[
               {
                 required: true,
-                message: "Please input your Username!",
+                message: "Please input your email!",
               },
             ]}
           >
             <Input
               prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
-              placeholder="Username"
+              placeholder="email"
             />
           </FormItem>
           <FormItem

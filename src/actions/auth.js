@@ -75,9 +75,8 @@ const doSignIn = (infoUser) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res.returnCode === 1) {
-          localStorage.setItem(ACCESS_TOKEN_KEY, res.data.accessToken);
-          localStorage.setItem(REFRESH_TOKEN_KEY, res.data.refreshToken);
+        if (res) {
+          localStorage.setItem(ACCESS_TOKEN_KEY, res.token);
 
           dispatch({
             type: DO_SIGNIN_SUCCESS,

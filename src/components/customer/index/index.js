@@ -72,7 +72,7 @@ class Dashboard extends React.Component {
     render() {
         let GirdLayout;
         const { notifications, isRead } = this.state;
-
+        console.log('this.props.match.params.type:', this.props.match.params.type)
         if (this.state.collapse) {
             GirdLayout = (<Row>
                 <Col span={2}>

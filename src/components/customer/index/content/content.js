@@ -5,6 +5,10 @@ import InternalTransfer from '../../../../containers/customer/internal-tranfer';
 import SetupRecipient from '../../../../containers/customer/setup-recipient';
 import TransactionHistory from '../../../../containers/customer/transaction-history';
 import DebtReminder from '../../../../containers/customer/debt-reminder';
+import UsersManagement from '../../../../containers/customer/users-management';
+
+
+
 
 // import CloseWallet from '../../../../containers/customer/close-wallet';
 
@@ -65,6 +69,15 @@ export default class Content extends Component {
                     </React.Fragment>
                 )
             }
+            case MENUITEM.USER: {
+                return content_layout = (
+                    <React.Fragment>
+                        <h2>Users Management</h2>
+                        <UsersManagement />
+                    </React.Fragment>
+                );
+            }
+
             default: {
                 content_layout = (
                     <React.Fragment>

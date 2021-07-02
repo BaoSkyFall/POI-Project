@@ -1,19 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import UsersManagement from '../../components/customer/users/users';
-import { fetchTransactionHistoryLocal, resetStore } from '../../actions/customer/transaction-history';
+import { fetchAllUsers, resetStore } from '../../actions/customer/users-management';
 
 const mapStateToProps = (state) => {
   return {
-    isLoading: state.transactionHistoryReducer.isLoading,
-    transactionHistory: state.transactionHistoryReducer.transactionHistory,
-    messageError: state.transactionHistoryReducer.messageError,
+    isLoading: state.userManagementReducer.isLoading,
+    listUsers: state.userManagementReducer.listUsers,
+    messageError: state.userManagementReducer.messageError,
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTransactionHistoryLocal: (id, accessToken,isAll) => dispatch(fetchTransactionHistoryLocal(id, accessToken,isAll)),
+    fetchAllUsers: (accessToken) => dispatch(fetchAllUsers(accessToken)),
     resetStore: () => dispatch(resetStore())
   }
 }
