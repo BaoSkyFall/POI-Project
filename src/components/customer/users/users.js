@@ -182,7 +182,7 @@ class UsersManagement extends React.Component {
                     bordered />
 
                 <Modal
-                    title="Add Debt Reminder"
+                    title="User Modal"
                     visible={visible}
                     onOk={
                         this.handleOk
@@ -238,7 +238,7 @@ class UsersManagement extends React.Component {
                             <Input />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
-                            <Button form="myForm" type="primary" htmlType="submit">
+                            <Button type="primary" htmlType="submit">
                                 Submit
                             </Button>
 
