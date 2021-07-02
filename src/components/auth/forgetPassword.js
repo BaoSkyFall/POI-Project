@@ -158,7 +158,7 @@ class SignInForm extends React.Component {
               <p>Enter your email to get OTP</p>
 
               {this.props.isLoading && (
-                <Spin tip="LoaSding ..." size="large">
+                <Spin tip="Loading ..." size="large">
                   {formOneLayout}
                 </Spin>
               )}
@@ -172,7 +172,7 @@ class SignInForm extends React.Component {
               <p>Please check your email then enter OTP</p>
 
               {this.props.isLoading && (
-                <Spin tip="LoaSding ..." size="large">
+                <Spin tip="Loading ..." size="large">
                   {formTwoLayout}
                 </Spin>
               )}

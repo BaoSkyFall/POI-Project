@@ -173,7 +173,7 @@ class SignInForm extends React.Component {
             </legend>
 
             {this.props.isLoading && (
-              <Spin tip="LoaSding ..." size="large">
+              <Spin tip="Loading ..." size="large">
                 {formLayout}
               </Spin>
             )}

@@ -6,7 +6,7 @@ import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
-import { WarningOutlined } from '@ant-design/icons';
+import { WarningOutlined, InfoCircleOutlined, UserAddOutlined } from '@ant-design/icons';
 const layout = {
     labelCol: {
         span: 8,
@@ -24,6 +24,7 @@ const tailLayout = {
 
 class UsersManagement extends React.Component {
     formRef = React.createRef();
+    formRefAdd = React.createRef();
 
     constructor(props) {
         super(props);
@@ -84,7 +85,14 @@ class UsersManagement extends React.Component {
             render: (record) => (
                 <Space size="middle">
                     <a onClick={() => this.onEditUser(record)}>Edit</a>
-                    <a onClick={() => this.onDeleteUser(record)}>Delete</a>
+                    {
+                        record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeleteUser(record)}>
+                            <a>Inactive</a>
+                        </Popconfirm> : null
+                    }
+
+
+
                 </Space>
             )
         }];
@@ -92,86 +100,108 @@ class UsersManagement extends React.Component {
         this.state = {
             accessToken: localStorage.getItem(ACCESS_TOKEN_KEY) || '',
             email: localStorage.getItem(EMAIL_KEY) || '',
-            visible: false,
+            userSelected: '',
+            visibleUpdate: false,
+            visibleAdd: false,
             confirmLoading: false,
         }
     }
+
+
     onEditUser(values) {
-        this.setState({ visible: true })
+        this.setState({ visibleUpdate: true })
         console.log('values:', values)
         setTimeout(() => {
             this.onFill(values)
         }, 100)
     }
-    onDeleteUser(values) {
-        console.log('values:', values)
-    }
     handleCancelModal() {
-        this.setState({ visible: false })
+
+        this.setState({ visibleUpdate: false })
+        // this.props.fetchAllUsers(this.state.accessToken);
+
     }
     onFinish = values => {
-        console.log('Success:', values);
+        values.userId = this.state.userSelected.userId
+        values.username = this.state.userSelected.username
+        values.avatar = this.state.userSelected.avatar
+        this.handleCancelModal()
+        this.props.updateUser(this.state.accessToken, values)
     };
+    onFinishAdd = values => {
+        console.log('values:', values)
+        values.roleId = '3fa85f64-5717-4562-b3fc-2c963f66afa6'
+        values.avatar = null;
+        this.setState({ visibleAdd: false })
+        this.props.addUser(this.state.accessToken, values)
 
+    }
     onReset = () => {
         this.form.resetFields();
     };
 
     onFill = (data) => {
-        this.formRef.current.setFieldsValue({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phone: data.phone,
-        })
+        if (this.formRef.current) {
+            this.formRef.current.setFieldsValue({
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                phone: data.phone,
+            })
+        }
+
 
 
     };
+    onAddUser() {
+        this.setState({ visibleAdd: true })
+        if (this.formRefAdd.current) {
+            this.formRefAdd.current.resetFields()
+
+        }
+    }
+    onDeleteUser(values) {
+        console.log('values:', values)
+        this.props.deleteUser(this.state.accessToken, values.userId)
+    }
+
+    componentDidUpdate() {
+        const { isAction } = this.props
+        if (isAction) {
+            this.props.fetchAllUsers(this.state.accessToken)
+        }
+    }
     componentDidMount() {
         const { accessToken } = this.state;
         this.props.fetchAllUsers(accessToken);
-
-        // fetch(`${URL_SERVER}/user/me`, {
-        //     headers: {
-        //         x_accesstoken: accessToken
-        //     }
-        // })
-        //     .then(res => res.json())
-        //     .then(res => {
-        //         console.log('res:', res)
-        //         // if (res.status === 200) {
-        //         //     localStorage.setItem(EMAIL_KEY, res.data.email)
-        //         //     localStorage.setItem('role', res.data.role)
-        //         //     if (res.data.role !== 'customer')
-        //         //         window.location.href = '/signin';
-        //         // }
-        //         // else {
-        //         //     localStorage.removeItem(ACCESS_TOKEN_KEY);
-        //         //     localStorage.removeItem(EMAIL_KEY);
-        //         //     localStorage.removeItem('role');
-        //         //     window.location.href = '/signin';
-        //         // }
-        //     })
     }
 
     render() {
-        const { isLoading, messageError, listUsers } = this.props;
-        const { confirmLoading, visible } = this.state;
-        console.log('listUsers:', listUsers)
+        const { isLoading, messageError, isAction, messageSuccess, listUsers } = this.props;
+        const { confirmLoading, visibleUpdate, visibleAdd } = this.state;
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
             return (<Redirect to={{
                 pathname: '/signin',
             }} />);
         }
-
         const contentLayout = (
             <React.Fragment>
-                {messageError ?
+                {messageError && isAction ?
                     notification.open({
                         message: messageError,
                         icon: <WarningOutlined style={{ color: 'red' }} />,
                     }) : null}
+                {messageSuccess && isAction ?
+                    notification.open({
+                        message: messageSuccess,
+                        icon: <InfoCircleOutlined style={{ color: 'blue' }} />,
+                    }) : null}
+                <Button className="button-add" onClick={() => {
+                    this.onAddUser()
+                }} type="primary" icon={<UserAddOutlined />}>
+                    Add New User
+                </Button>
 
                 <Table
                     columns={this.columns}
@@ -182,12 +212,17 @@ class UsersManagement extends React.Component {
                     bordered />
 
                 <Modal
-                    title="User Modal"
-                    visible={visible}
+                    title="Update User"
+                    visible={visibleUpdate}
                     onOk={
                         this.handleOk
                     }
                     confirmLoading={confirmLoading}
+                    footer={[
+                        <Button key="back" onClick={() => { this.handleCancelModal() }}>
+                            Cancel
+                        </Button>,
+                    ]}
                     onCancel={() => { this.handleCancelModal() }}
                 >
                     <Form {...layout} ref={this.formRef} name="control-hooks" onFinish={this.onFinish}
@@ -239,7 +274,7 @@ class UsersManagement extends React.Component {
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
-                                Submit
+                                Update
                             </Button>
 
 
@@ -248,6 +283,102 @@ class UsersManagement extends React.Component {
 
 
                 </Modal>
+
+                <Modal
+                    title="Add User"
+                    visible={visibleAdd}
+                    onOk={
+                        this.handleOk
+                    }
+                    confirmLoading={confirmLoading}
+                    footer={[
+                        <Button key="back" onClick={() => { this.setState({ visibleAdd: false }) }}>
+                            Cancel
+                        </Button>,
+                    ]}
+                    onCancel={() => { this.setState({ visibleAdd: false }) }}
+                >
+                    <Form {...layout} ref={this.formRefAdd} name="control-hooks" onFinish={this.onFinishAdd}
+
+                    >
+                        <Form.Item
+                            name="username"
+                            label="Username"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="firstName"
+                            label="First Name"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="lastName"
+                            label="Last Name"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="email"
+                            label="Email"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="phone"
+                            label="Phone"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="password"
+                            label="Password"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item {...tailLayout}>
+                            <Button type="primary" htmlType="submit">
+                                Add New
+                            </Button>
+
+
+                        </Form.Item>
+                    </Form>
+
+
+                </Modal>
+
             </React.Fragment>
         )
 
