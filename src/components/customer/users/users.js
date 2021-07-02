@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Tag, notification, Icon, Spin } from 'antd';
+import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
@@ -7,8 +7,24 @@ import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
 import { WarningOutlined } from '@ant-design/icons';
+const layout = {
+    labelCol: {
+        span: 8,
+    },
+    wrapperCol: {
+        span: 16,
+    },
+};
+const tailLayout = {
+    wrapperCol: {
+        offset: 8,
+        span: 16,
+    },
+};
 
 class UsersManagement extends React.Component {
+    formRef = React.createRef();
+
     constructor(props) {
         super(props);
 
@@ -29,28 +45,24 @@ class UsersManagement extends React.Component {
             dataIndex: 'firstName',
             defaultSortOrder: 'descend',
             width: '20%',
-            sorter: (a, b) => a.firstName.localeCompare(b.firstName),
         },
         {
             title: 'Last Name',
             dataIndex: 'lastName',
             defaultSortOrder: 'descend',
             width: '20%',
-            sorter: (a, b) => a.lastName.localeCompare(b.lastName),
         },
         {
             title: 'Email',
             dataIndex: 'email',
             defaultSortOrder: 'descend',
             width: '20%',
-            sorter: (a, b) => a.email.localeCompare(b.email),
         },
         {
             title: 'Phone',
             dataIndex: 'phone',
             defaultSortOrder: 'descend',
             width: '20%',
-            sorter: (a, b) => a.phone.localeCompare(b.phone),
         },
         {
             title: 'Status',
@@ -66,19 +78,55 @@ class UsersManagement extends React.Component {
         },
         {
             title: 'Action',
-            className: 'column-money',
-            dataIndex: 'amount',
+            key: 'action',
             defaultSortOrder: 'descend',
             width: '15%',
-            sorter: (a, b) => a.amount.localeCompare(b.amount),
+            render: (record) => (
+                <Space size="middle">
+                    <a onClick={() => this.onEditUser(record)}>Edit</a>
+                    <a onClick={() => this.onDeleteUser(record)}>Delete</a>
+                </Space>
+            )
         }];
 
         this.state = {
             accessToken: localStorage.getItem(ACCESS_TOKEN_KEY) || '',
-            email: localStorage.getItem(EMAIL_KEY) || ''
+            email: localStorage.getItem(EMAIL_KEY) || '',
+            visible: false,
+            confirmLoading: false,
         }
     }
+    onEditUser(values) {
+        this.setState({ visible: true })
+        console.log('values:', values)
+        setTimeout(() => {
+            this.onFill(values)
+        }, 100)
+    }
+    onDeleteUser(values) {
+        console.log('values:', values)
+    }
+    handleCancelModal() {
+        this.setState({ visible: false })
+    }
+    onFinish = values => {
+        console.log('Success:', values);
+    };
 
+    onReset = () => {
+        this.form.resetFields();
+    };
+
+    onFill = (data) => {
+        this.formRef.current.setFieldsValue({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone,
+        })
+
+
+    };
     componentDidMount() {
         const { accessToken } = this.state;
         this.props.fetchAllUsers(accessToken);
@@ -108,6 +156,7 @@ class UsersManagement extends React.Component {
 
     render() {
         const { isLoading, messageError, listUsers } = this.props;
+        const { confirmLoading, visible } = this.state;
         console.log('listUsers:', listUsers)
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
@@ -131,6 +180,74 @@ class UsersManagement extends React.Component {
                     pagination={{ pageSize: 10 }}
                     scroll={{ y: '60vh' }}
                     bordered />
+
+                <Modal
+                    title="Add Debt Reminder"
+                    visible={visible}
+                    onOk={
+                        this.handleOk
+                    }
+                    confirmLoading={confirmLoading}
+                    onCancel={() => { this.handleCancelModal() }}
+                >
+                    <Form {...layout} ref={this.formRef} name="control-hooks" onFinish={this.onFinish}
+
+                    >
+                        <Form.Item
+                            name="firstName"
+                            label="First Name"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="lastName"
+                            label="Last Name"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="email"
+                            label="Email"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="phone"
+                            label="Phone"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item {...tailLayout}>
+                            <Button form="myForm" type="primary" htmlType="submit">
+                                Submit
+                            </Button>
+
+
+                        </Form.Item>
+                    </Form>
+
+
+                </Modal>
             </React.Fragment>
         )
 

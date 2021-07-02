@@ -148,7 +148,7 @@ class DebtReminder extends React.Component {
     componentDidUpdate = () => {
         const { isAction, name, messageError, data, visiblePayDebt } = this.props;
         if (isAction) {
-            const { accessToken, email } = this.state;
+            const { accessToken } = this.state;
             var decoded = jwt(accessToken) || {};
             this.props.fetchGetDebtReminder(decoded.userId, accessToken)
             this.props.fetchGetDebtOwner(decoded.userId, accessToken);
@@ -183,7 +183,7 @@ class DebtReminder extends React.Component {
 
     }
     componentDidMount() {
-        const { accessToken, email } = this.state;
+        const { accessToken } = this.state;
         var decoded = jwt(accessToken) || {};
         this.props.fetchGetDebtReminder(decoded.userId, accessToken)
         this.props.fetchGetDebtOwner(decoded.userId, accessToken)
@@ -220,8 +220,6 @@ class DebtReminder extends React.Component {
     handlePressEnter = (values) => {
         let wallet_id = values.target.value;
         const { accessToken } = this.state;
-
-        console.log("wallet id: ", wallet_id)
         if (wallet_id) {
             this.props.fetchGetNameByWalletId(wallet_id, accessToken)
         }
@@ -234,7 +232,6 @@ class DebtReminder extends React.Component {
         });
         let data = this.formRef.current.getFieldsValue()
         var decoded = jwt(accessToken) || {};
-        console.log('decoded:', decoded);
         let dt = {
             id_debtor: idDebtor,
             id_owner: decoded.userId,
