@@ -66,7 +66,7 @@ const doSignIn = (infoUser) => {
 
     console.log("infoUser:", infoUser);
 
-    fetch(`${URL_SERVER}/api/login`, {
+    fetch(`${URL_SERVER}/api/User/login`, {
       method: "POST",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -92,10 +92,10 @@ const doSignIn = (infoUser) => {
       })
       .catch((error) => {
         console.log(error);
-        dispatch({
-          type: DO_SIGNIN_SUCCESS,
-          signinSuccess: true,
-        });
+        // dispatch({
+        //   type: DO_SIGNIN_SUCCESS,
+        //   signinSuccess: true,
+        // });
       });
   };
 };
