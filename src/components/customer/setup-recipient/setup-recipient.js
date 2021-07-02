@@ -1,139 +1,123 @@
-import React from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import {
-    Table, Input, Button, Popconfirm, Form, notification, Icon, Spin
+    Table, Input, Button, Popconfirm, Form, notification, Spin, Tabs
 } from 'antd';
+import { WarningOutlined, InfoCircleOutlined, PlusOutlined,DeleteFilled } from '@ant-design/icons';
+
 import { Redirect } from 'react-router-dom';
 
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import './style.css';
-
 import ModalAddRecipient from '../setup-recipient/modal-add-recipient/modal-add-recipient'
 import { URL_SERVER } from '../../../configs/server';
-
+import jwt from 'jwt-decode'
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
 
-const EditableRow = ({ form, index, ...props }) => (
-    <EditableContext.Provider value={form}>
-        <tr {...props} />
-    </EditableContext.Provider>
-);
+const EditableRow = ({ index, ...props }) => {
+    const [form] = Form.useForm();
+    return (
+        <Form form={form} component={false}>
+            <EditableContext.Provider value={form}>
+                <tr {...props} />
+            </EditableContext.Provider>
+        </Form>
+    );
+};
 
-const EditableFormRow = Form.create()(EditableRow);
-
-class EditableCell extends React.Component {
-    state = {
-        editing: false,
-    }
-
-    componentDidMount() {
-        if (this.props.editable) {
-            document.addEventListener('click', this.handleClickOutside, true);
+const EditableCell = ({
+    title,
+    editable,
+    children,
+    dataIndex,
+    record,
+    handleSave,
+    ...restProps
+}) => {
+    const [editing, setEditing] = useState(false);
+    const inputRef = useRef();
+    const form = useContext(EditableContext);
+    useEffect(() => {
+        if (editing) {
+            inputRef.current.focus();
         }
-    }
+    }, [editing]);
 
-    componentWillUnmount() {
-        if (this.props.editable) {
-            document.removeEventListener('click', this.handleClickOutside, true);
-        }
-    }
-
-    toggleEdit = () => {
-        const editing = !this.state.editing;
-        this.setState({ editing }, () => {
-            if (editing) {
-                this.input.focus();
-            }
+    const toggleEdit = () => {
+        setEditing(!editing);
+        form.setFieldsValue({
+            [dataIndex]: record[dataIndex],
         });
-    }
+    };
 
-    handleClickOutside = (e) => {
-        const { editing } = this.state;
-        if (editing && this.cell !== e.target && !this.cell.contains(e.target)) {
-            this.save();
-        }
-    }
-
-    save = () => {
-        const { record, handleSave } = this.props;
-        this.form.validateFields((error, values) => {
-            if (error) {
-                return;
-            }
-            this.toggleEdit();
+    const save = async e => {
+        try {
+            const values = await form.validateFields();
+            toggleEdit();
             handleSave({ ...record, ...values });
-        });
+        } catch (errInfo) {
+            console.log('Save failed:', errInfo);
+        }
+    };
+
+    let childNode = children;
+
+    if (editable) {
+        childNode = editing ? (
+            <Form.Item
+                style={{
+                    margin: 0,
+                }}
+                name={dataIndex}
+                rules={[
+                    {
+                        required: true,
+                        message: `${title} is required.`,
+                    },
+                ]}
+            >
+                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+        ) : (
+                <div
+                    className="editable-cell-value-wrap"
+                    style={{
+                        paddingRight: 24,
+                    }}
+                    onClick={toggleEdit}
+                >
+                    {children}
+                </div>
+            );
     }
 
-    render() {
-        const { editing } = this.state;
-        const {
-            editable,
-            dataIndex,
-            title,
-            record,
-            index,
-            handleSave,
-            ...restProps
-        } = this.props;
-        return (
-            <td ref={node => (this.cell = node)} {...restProps}>
-                {editable ? (
-                    <EditableContext.Consumer>
-                        {(form) => {
-                            this.form = form;
-                            return (
-                                editing ? (
-                                    <FormItem style={{ margin: 0 }}>
-                                        {form.getFieldDecorator(dataIndex, {
-                                            rules: [{
-                                                required: true,
-                                                message: `${title} is required.`,
-                                            }],
-                                            initialValue: record[dataIndex],
-                                        })(
-                                            <Input
-                                                ref={node => (this.input = node)}
-                                                onPressEnter={this.save}
-                                            />
-                                        )}
-                                    </FormItem>
-                                ) : (
-                                        <div
-                                            className="editable-cell-value-wrap"
-                                            style={{ paddingRight: 24 }}
-                                            onClick={this.toggleEdit}
-                                        >
-                                            {restProps.children}
-                                        </div>
-                                    )
-                            );
-                        }}
-                    </EditableContext.Consumer>
-                ) : restProps.children}
-            </td>
-        );
-    }
-}
+    return <td {...restProps}>{childNode}</td>;
+};
+
 
 class SetupRecipient extends React.Component {
     constructor(props) {
         super(props);
         this.columns = [{
             title: "Recipient's Account Number",
-            dataIndex: 'walletNumber',
-            width: '40%',
+            dataIndex: 'walletId',
+            width: '30%',
         }, {
             title: 'Remind Name (Click to edit)',
-            dataIndex: 'remindName',
-            width: '50%',
+            dataIndex: 'name_recipient',
+            width: '30%',
             editable: true,
+         
+        }, {
+            title: "Bank's Name",
+            dataIndex: 'Name',
+            width: '30%',
         }, {
             title: 'Operation',
             dataIndex: 'operation',
             render: (text, record) => (
-                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.walletNumber)}>
-                    <a href="javascript:;">Delete</a>
+                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record)}>
+                   <a style={{ color: '#f5222d', fontSize: '15px' }}><DeleteFilled style={{ marginRight: '4px' }} />Delete</a> 
                 </Popconfirm>
             ),
         }];
@@ -143,18 +127,37 @@ class SetupRecipient extends React.Component {
             email: localStorage.getItem(EMAIL_KEY) || ''
         }
     }
+    componentDidUpdate() {
+        const { accessToken } = this.state;
+        const { fetchRecipients } = this.props
 
-    handleDelete = (walletNumber) => {
+        let decoded = jwt(accessToken);
+        console.log('decode:', decoded)
+        // fetchRecipients(decode.username, accessToken);
+        // this.props.fetchRecipients(decoded.username,accessToken);
+
+
+
+    }
+    handleDelete = (record) => {
         const { accessToken, email } = this.state;
-        this.props.deleteRecipient(email, walletNumber, accessToken);
+        const { deleteRecipient, recipients } = this.props
+        console.log('record:', record)
+        this.props.deleteRecipient(record, recipients, accessToken);
+        let decode = jwt(accessToken);
     }
 
     handleSave = (row) => {
         const { accessToken, email } = this.state;
+        let decoded = jwt(accessToken);
         const newData = this.props.recipients;
-        const index = newData.findIndex(item => row.walletNumber === item.walletNumber);
+        const index = newData.findIndex(item => row.walletId === item.walletId);
+        const { updateRecipient, recipients } = this.props
+
         const item = newData[index];
-        this.props.updateRecipient(email, item.walletNumber, row.remindName, accessToken);
+        console.log('item:', item)
+        console.log('row:', row);
+        updateRecipient(row.id, row.id_recipient, row.name_recipient,row.walletId,recipients, accessToken);
     }
 
     handleAdd = () => {
@@ -163,45 +166,47 @@ class SetupRecipient extends React.Component {
 
     componentDidMount() {
         const { accessToken, email } = this.state;
-        this.props.fetchRecipients(email, accessToken);
-
-        fetch(`${URL_SERVER}/user/me`, {
-            headers: {
-                x_accesstoken: accessToken
-            }
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.status === 200) {
-                localStorage.setItem(EMAIL_KEY, res.data.email)
-                localStorage.setItem('role', res.data.role)
-                if (res.data.role !== 'customer') 
-                    window.location.href = '/signin';
-            }
-            else {
-                localStorage.removeItem(ACCESS_TOKEN_KEY);
-                localStorage.removeItem(EMAIL_KEY);
-                localStorage.removeItem('role');
-                window.location.href = '/signin';
-            }
-        })
+        let decode = jwt(accessToken);
+        console.log('decode:', decode)
+        this.props.fetchRecipients(decode.username, accessToken);
+        
+        // fetch(`${URL_SERVER}/user/me`, {
+        //     headers: {
+        //         x_accesstoken: accessToken
+        //     }
+        // })
+        // .then(res => res.json())
+        // .then(res => {
+        //     if (res.status === 200) {
+        //         localStorage.setItem(EMAIL_KEY, res.data.email)
+        //         localStorage.setItem('role', res.data.role)
+        //         if (res.data.role !== 'customer') 
+        //             window.location.href = '/signin';
+        //     }
+        //     else {
+        //         localStorage.removeItem(ACCESS_TOKEN_KEY);
+        //         localStorage.removeItem(EMAIL_KEY);
+        //         localStorage.removeItem('role');
+        //         window.location.href = '/signin';
+        //     }
+        // })
     }
 
     render() {
         const { recipients, messageSuccess, messageError, isLoading } = this.props;
-
+        
         if (messageError === 'AccessToken is not valid') {
             return (<Redirect to={{
                 pathname: '/signin',
-            }}/>);
+            }} />);
         }
-
         const components = {
             body: {
-                row: EditableFormRow,
+                row: EditableRow,
                 cell: EditableCell,
             },
         };
+
         const columns = this.columns.map((col) => {
             if (!col.editable) {
                 return col;
@@ -223,20 +228,20 @@ class SetupRecipient extends React.Component {
                 {messageError ?
                     notification.open({
                         message: messageError,
-                        icon: <Icon type="warning" style={{ color: 'red' }} />,
+                        icon: <WarningOutlined style={{ color: 'red' }} />,
                     }) : null}
 
-                {messageSuccess ? 
+                {messageSuccess ?
                     notification.open({
                         message: messageSuccess,
-                        icon: <Icon type="info" style={{ color: 'blue' }} />,
+                        icon: <InfoCircleOutlined style={{ color: 'blue' }} />,
                     }) : null}
 
 
-                {messageSuccess || messageError ? this.props.resetStore() : null}   
+                {messageSuccess || messageError ? this.props.resetStore() : null}
 
-                <Button type="primary" icon="plus" style={{marginBottom: '1%'}} onClick={this.handleAdd} >Add</Button>
-                <br/>
+                <Button type="primary" icon={<PlusOutlined />} style={{ marginBottom: '1%' }} onClick={this.handleAdd} >Add</Button>
+                <br />
                 <Table
                     components={components}
                     rowClassName={() => 'editable-row'}
@@ -258,7 +263,7 @@ class SetupRecipient extends React.Component {
 
                 {!isLoading && contentLayout}
 
-                <ModalAddRecipient {...this.props} {...this.state}/>
+                <ModalAddRecipient {...this.props} {...this.state} />
             </div>
         );
     }

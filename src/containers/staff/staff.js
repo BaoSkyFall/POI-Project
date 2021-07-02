@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import PageStaff from './../../components/staffs/index/index';
+import PageStaff from '../../components/staff/index/index';
 import { connect } from 'react-redux';
 import { actRegisterUserRequest, actResetStatusRegisterAcount } from '../../actions/staff/register';
-import { actSearchUserRequest, actRegisterPaymentRequest, actSearchUserReset } from '../../actions/staff/payment';
+import { actSearchUserRequest, actRegisterPaymentRequest, actSearchUserReset,fetchTransactionHistoryLocalByUserName } from '../../actions/staff/payment';
 import { actSearchAccountRequest, actRechargeRequest, actResetStatus, actResetStatusRecharge, actRechargeReset } from '../../actions/staff/recharge';
 
 class Staff extends Component {
@@ -23,10 +23,11 @@ class Staff extends Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log('state:', state);
     return {
         registerState: state.accountUser,
         paymentAccount: state.paymentAccount,
-        recharge: state.recharge
+        recharge: state.rechargeReducer
     }
 }
 
@@ -61,6 +62,9 @@ const mapDispatchToProps = (dispatch, props) => {
         },
         resetUpdate: () =>{
             dispatch(actRechargeReset());
+        },
+        fetchTransactionHistoryLocalByUserName: (username, accessToken,isAll=true)=>{
+            dispatch(fetchTransactionHistoryLocalByUserName(username, accessToken,isAll=true))
         }
     }
 }

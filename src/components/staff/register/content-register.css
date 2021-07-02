@@ -1,0 +1,35 @@
+
+ .left{
+    float: left;
+    width: 30%;
+}
+
+.right{
+    float: right;
+    width: 70%;
+}
+
+.ant-row{
+    margin-bottom: 2%;
+}
+
+.contentPage .ant-card.ant-card-bordered.ant-card-wider-padding{
+    margin-bottom: 3%;
+}
+
+.cardRegister button.ant-btn.buttonRegister.ant-btn-primary {
+    position: relative;
+    margin-top: 15px;
+    font-size: 15px;
+}
+
+.inputP input#phone {
+    width: 43%;
+}
+.ant-card-body .ant-form-item input
+{
+    color:black
+}
+.spn{
+margin-left: -12%;
+}

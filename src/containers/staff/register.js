@@ -18,8 +18,8 @@ class RegisterContainer extends Component {
     }
 }
 
-const mapStateToProps = (state) =>{
-    return{
+const mapStateToProps = (state) => {
+    return {
         registerState: state.accountUser
     }
 }

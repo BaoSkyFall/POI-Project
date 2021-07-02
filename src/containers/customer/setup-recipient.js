@@ -6,10 +6,15 @@ import {
   updateRecipient,
   deleteRecipient,
   resetStore,
-  addRecipient,
-  toggleModalAddRecipient
+  addRecipientLocal,
+  addRecipientForeign,
+  toggleModalAddRecipient,
+  changeTabPanel
 } from '../../actions/customer/setup-recipient';
-
+import {
+  trackRecipientLocal,
+  trackRecipientForeign,
+} from '../../actions/customer/internal-tranfer'
 const mapStateToProps = (state) => {
   return {
     isLoading: state.setupRecipientReducer.isLoading,
@@ -17,17 +22,29 @@ const mapStateToProps = (state) => {
     recipients: state.setupRecipientReducer.recipients,
     messageSuccess: state.setupRecipientReducer.messageSuccess,
     messageError: state.setupRecipientReducer.messageError,
+    isLocalAdd: state.setupRecipientReducer.isLocalAdd,
+    bankRecipient: state.internalTransferReducer.bankRecipient,
+    fullNameRecipient: state.internalTransferReducer.fullNameRecipient,
+    usernameRecipient: state.internalTransferReducer.usernameRecipient,
+    isLocalRecipient: state.internalTransferReducer.isLocalRecipient,
+    messageErrorAddModal: state.internalTransferReducer.messageError,
+    messageSuccessAddModal:state.internalTransferReducer.messageSuccess
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchRecipients: (email, accessToken) => dispatch(fetchRecipients(email, accessToken)),
-    addRecipient: (email, receiverWalletNumber, remindName, accessToken) => dispatch(addRecipient(email, receiverWalletNumber, remindName, accessToken)),
-    updateRecipient: (email, walletNumber, remindName, accessToken) => dispatch(updateRecipient(email, walletNumber, remindName, accessToken)),
-    deleteRecipient: (email, walletNumber, accessToken) => dispatch(deleteRecipient(email, walletNumber, accessToken)),
+    fetchRecipients: (id, accessToken) => dispatch(fetchRecipients(id, accessToken)),
+    addRecipientLocal: (username, receiverWalletNumber, remindName,usernameRecipient,isLocalAdd, accessToken) => dispatch(addRecipientLocal(username, receiverWalletNumber, remindName,usernameRecipient,isLocalAdd, accessToken)),
+    addRecipientForeign: (username, receiverWalletNumber, remindName,bankLinkId,isLocalAdd, accessToken) => dispatch(addRecipientForeign(username, receiverWalletNumber, remindName,bankLinkId,isLocalAdd, accessToken)),
+    updateRecipient: (email, walletNumber, remindName,walletId,recipients, accessToken) => dispatch(updateRecipient(email, walletNumber, remindName, walletId,recipients,accessToken)),
+    deleteRecipient: (data, recipients, accessToken) => dispatch(deleteRecipient(data, recipients, accessToken)),
     resetStore: () => dispatch(resetStore()),
-    toggleModalAddRecipient: (isShowModalAddRecipient) => dispatch(toggleModalAddRecipient(isShowModalAddRecipient))
+    toggleModalAddRecipient: (isShowModalAddRecipient) => dispatch(toggleModalAddRecipient(isShowModalAddRecipient)),
+    trackRecipientLocal: (walletNumber, accessToken) => dispatch(trackRecipientLocal(walletNumber, accessToken)),
+    trackRecipientForeign: (bankid,walletNumber, accessToken) => dispatch(trackRecipientForeign(bankid,walletNumber, accessToken)),
+    changeTabPanel: () => dispatch(changeTabPanel()),
+    
   }
 }
 

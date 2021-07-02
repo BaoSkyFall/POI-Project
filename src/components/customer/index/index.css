@@ -1,7 +1,7 @@
 .col-left{
-    height: 100%;
+    height: auto;
     float: left;
-    position: fixed;
+    /* position: fixed; */
 }
 
 .col-right{

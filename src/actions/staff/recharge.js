@@ -1,5 +1,5 @@
 import * as Types from '../../constants/ActionTypes';
-import callApi from '../../utils/callApi';
+import callApi from '../../ultis/callApi';
 
 
 
@@ -7,10 +7,12 @@ export const actRechargeRequest = (data, accessToken) => {
     console.log(data)
     return (dispatch) => {
         dispatch(actRecharge());
-        return callApi(`wallet/recharge`, 'POST', data, { x_accessToken: accessToken })
+        console.log('data123124124124:', data)
+        return callApi(`api/money/addMoney`, 'POST', data, { x_accessToken: accessToken })
             .then(res => {
                 if (res.status === 200) {
-                    dispatch(actRechargeSuccess());
+                    console.log('data: recharge', data)
+                    dispatch(actRechargeSuccess(data));
                 }
                 else {
                     dispatch(actRechargeFail())
@@ -29,9 +31,10 @@ export const actRecharge = () => {
     }
 }
 
-export const actRechargeSuccess = () => {
+export const actRechargeSuccess = (data) => {
     return {
-        type: Types.UPDATE_BALANCE_SUCCESS
+        type: Types.UPDATE_BALANCE_SUCCESS,
+        data
     }
 }
 
@@ -52,9 +55,10 @@ export const actRechargeReset = () => {
 export const actSearchAccountRequest = (id, accessToken) => {
     return (dispatch) => {
         dispatch(actResetStatus());
-        return callApi(`wallet/recharge/${id}`, 'GET', null, { x_accessToken: accessToken })
+        return callApi(`api/staff/getInfoUserByWalletId/${id}`, 'GET', null, { x_accessToken: accessToken })
             .then(res => {
                 if (res.status === 200) {
+                    console.log("res: ",res)
                     dispatch(actSearchAccount(res.data.data[0]))
                 } else {
                     dispatch(actSearchAccountFail())

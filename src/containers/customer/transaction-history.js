@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TransactionHistory from '../../components/customer/transaction-history/transaction-history';
-import { fetchTransactionHistory, resetStore } from '../../actions/customer/transaction-history';
+import { fetchTransactionHistoryLocal, resetStore } from '../../actions/customer/transaction-history';
 
 const mapStateToProps = (state) => {
   return {
@@ -13,7 +13,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTransactionHistory: (email, accessToken) => dispatch(fetchTransactionHistory(email, accessToken)),
+    fetchTransactionHistoryLocal: (id, accessToken,isAll) => dispatch(fetchTransactionHistoryLocal(id, accessToken,isAll)),
     resetStore: () => dispatch(resetStore())
   }
 }

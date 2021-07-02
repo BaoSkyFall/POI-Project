@@ -1,7 +1,7 @@
 import {
-    FETCH_TRANSACTION_HISTORY,
-    FETCH_TRANSACTION_HISTORY_SUCCESS,
-    FETCH_TRANSACTION_HISTORY_FAIL,
+    FETCH_TRANSACTION_HISTORY_LOCAL,
+    FETCH_TRANSACTION_HISTORY_LOCAL_SUCCESS,
+    FETCH_TRANSACTION_HISTORY_LOCAL_FAIL,
     RESET_STORE
 } from '../../constants/customer/transaction-history';
 
@@ -13,20 +13,20 @@ const initialState = {
 
 export default function transactionHistoryReducer(state = initialState, action) {
     switch (action.type) {
-        case FETCH_TRANSACTION_HISTORY: {
+        case FETCH_TRANSACTION_HISTORY_LOCAL: {
             return {
                 ...state,
                 isLoading: true,
             }
         }
-        case FETCH_TRANSACTION_HISTORY_SUCCESS: {
+        case FETCH_TRANSACTION_HISTORY_LOCAL_SUCCESS: {
             return {
                 ...state,
                 transactionHistory: action.transactionHistory,
                 isLoading: false
             }
         }
-        case FETCH_TRANSACTION_HISTORY_FAIL: {
+        case FETCH_TRANSACTION_HISTORY_LOCAL_FAIL: {
             return {
                 ...state,
                 messageError: action.messageError,

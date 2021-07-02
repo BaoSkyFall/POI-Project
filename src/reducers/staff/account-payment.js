@@ -3,27 +3,62 @@ import * as Types from '../../constants/ActionTypes';
 var initialState = {
     isSearchFailed: false,
     isSearchLoading: false,
+    isSearchSuccess:false,
     isSuccess: false,
     isFailed: false,
     isLoading: false,
+    username:'',
+    name:'',
+    email:'',
+    phone:'',
+    idenityNumber:'',
+    dob:'',
     walletNumber:'',
-    massageError: ''
+    balance:'',
+    messageError: '',
+    transactionHistory:null
 }
 
 const paymentAccount = (state = initialState, action) => {
     switch (action.type) {
         case Types.SEARCH_USERNAME:
-            state = action.user
+            console.log('action:', action)
+            
             return {
                 ...state,
                 isSearchLoading: false,
-                isSearchFailed: false
+                isSearchFailed: false,
+                isSearchSuccess:true,
+                walletNumber: action.user.walletNumber,
+                email: action.user.email,
+                username: action.user.username,
+                name: action.user.name,
+                email: action.user.email,
+                phone: action.user.phone,
+                idenityNumber: action.user.idenityNumber,
+                dob: action.user.dob,
+                walletNumber: action.user.walletNumber,
+                balance: action.user.balance,
+                
+
+
+
             };
         case Types.SEARCH_USERNAME_FAIL:
             return {
                 ...state,
                 isSearchLoading: false,
-                isSearchFailed: true
+                isSearchFailed: true,
+                 walletNumber: '',
+                email: '',
+                username: '',
+                name: '',
+                email: '',
+                phone: '',
+                idenityNumber: '',
+                dob: '',
+                walletNumber: '',
+                balance: '',
             };
         case Types.SEARCH_USERNAME_LOADING:
             return {
@@ -33,8 +68,10 @@ const paymentAccount = (state = initialState, action) => {
             };
         case Types.SEARCH_USERNAME_RESET:
             return{
+                ...state,
                 isLoading: false,
                 isSuccess: false,
+                
                 isFailed: false
             };
         case Types.CREATE_PAYMENT_ACCOUNT:
@@ -56,8 +93,29 @@ const paymentAccount = (state = initialState, action) => {
                 ...state,
                 isFailed: true,
                 isLoading: false,
-                massageError: action.massageError
+                messageError: action.messageError
             }
+            case Types.FETCH_TRANSACTION_HISTORY_LOCAL:
+                return {
+                    ...state,
+                    isLoading: true,
+                    isSuccess: false,
+                    isFailed: false
+                };
+            case Types.FETCH_TRANSACTION_HISTORY_LOCAL_SUCCESS:
+                return {
+                    ...state,
+                    isSuccess: true,
+                    isLoading: false,
+                    transactionHistory: action.transactionHistory
+                }
+            case Types.FETCH_TRANSACTION_HISTORY_LOCAL_FAIL:
+                return {
+                    ...state,
+                    isFailed: true,
+                    isLoading: false,
+                    transactionHistory: null
+                }
         default: return { ...state };
     }
 }

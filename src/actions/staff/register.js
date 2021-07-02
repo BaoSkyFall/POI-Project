@@ -1,5 +1,5 @@
 import * as Types from './../../constants/ActionTypes';
-import callApi from './../../utils/callApi';
+import callApi from '../../ultis/callApi';
 
 
 // Register Account User
@@ -8,9 +8,10 @@ export const actRegisterUserRequest = (data, accessToken) => {
     console.log(accessToken)
     return (dispatch) => {
         dispatch(actRegisterUser());
-        return callApi(`register`, 'POST', data, {x_accessToken: accessToken})
+        return callApi(`api/staff/addUser`, 'POST', data, {x_accessToken: accessToken})
             .then(res => {
-                if (res.status === 200) {
+                console.log('res:', res);
+                if (res.status === 201) {
                     dispatch(actRegisterSuccess());
                 }
                 else{

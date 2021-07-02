@@ -1,5 +1,34 @@
 import * as Types from '../../constants/ActionTypes';
-import callApi from '../../utils/callApi';
+import callApi from '../../ultis/callApi';
+
+export const fetchTransactionHistoryLocalByUserName = (username, accessToken,isAll=true) => {
+    return (dispatch) => {
+        dispatch({ type: Types.FETCH_TRANSACTION_HISTORY_LOCAL });
+        return callApi(`api/money/historyLocalByUsername?username=${username}&isAll=${isAll}`, 'GET', {}, { x_accessToken: accessToken })
+        .then(res => {
+            console.log('resHistory:', res)
+            if (res.data.data) {
+                dispatch({
+                    type: Types.FETCH_TRANSACTION_HISTORY_LOCAL_SUCCESS,
+                    transactionHistory: res.data.data
+                });
+            }
+            else
+            {
+                dispatch({
+                    type: Types.FETCH_TRANSACTION_HISTORY_LOCAL_FAIL,
+                    messageError: "Can' find history"
+                });
+            }
+        })
+        .catch(error => {
+            dispatch({
+                type: Types.FETCH_TRANSACTION_HISTORY_LOCAL_FAIL,
+                messageError: "Server's error"
+            });
+        })
+    }
+}
 
 
 export const actRegisterPaymentRequest = (data, accessToken) => {
@@ -65,14 +94,15 @@ export const actRegisterPayment = () => {
 //     }
 // }
 
-export const actSearchUserRequest = (email, accessToken) => {
+export const actSearchUserRequest = (username, accessToken) => {
     return (dispatch) => {
         dispatch(actSearchUserLoading());
-        return callApi(`user?email=${email}`, 'GET', null, {x_accessToken: accessToken})
+        return callApi(`api/staff/getInfoUserByUsername/${username}`, 'GET', null, {x_accessToken: accessToken})
             .then(res => {
                 if (res.status === 200) {
                     console.log(res.data.data)
-                    var dt = { ...res.data.data };
+                    var dt = res.data.data[0];
+                    console.log('dt:', dt)
                     dispatch(actSearchUser(dt));
                 }else{
                     dispatch(actSearchUserFail());
