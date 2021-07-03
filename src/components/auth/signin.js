@@ -26,7 +26,7 @@ class SignInForm extends React.Component {
       if (decoded.role > 1) {
         window.location.href = "/staff/register";
       } else {
-        window.location.href = "/dashboard/payment-accounts";
+        window.location.href = "/dashboard/destination-management";
       }
     }
   }
@@ -58,7 +58,7 @@ class SignInForm extends React.Component {
         return (
           <Redirect
             to={{
-              pathname: "/dashboard/payment-accounts",
+              pathname: "/dashboard/destination-management",
             }}
           />
         );

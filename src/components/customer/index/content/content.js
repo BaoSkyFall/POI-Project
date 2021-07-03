@@ -11,6 +11,10 @@ import TripManagement from '../../../../containers/customer/trip-management';
 import HashTagManagement from '../../../../containers/customer/hashtag-management';
 import DestinationManagement from '../../../../containers/customer/destination-management';
 import DestinationTypeManagement from '../../../../containers/customer/destination-type-management';
+import POIManagement from '../../../../containers/customer/poi';
+import POITypeManagement from '../../../../containers/customer/poi-type';
+
+
 
 // import CloseWallet from '../../../../containers/customer/close-wallet';
 
@@ -119,6 +123,23 @@ export default class Content extends Component {
                     </React.Fragment>
                 );
             }
+            case MENUITEM.POI_MANAGEMENT: {
+                return content_layout = (
+                    <React.Fragment>
+                        <h2>POI Management</h2>
+                        <POIManagement />
+                    </React.Fragment>
+                );
+            }
+            case MENUITEM.POI_TYPE: {
+                return content_layout = (
+                    <React.Fragment>
+                        <h2>POI Type Management</h2>
+                        <POITypeManagement />
+                    </React.Fragment>
+                );
+            }
+            
             default: {
                 content_layout = (
                     <React.Fragment>

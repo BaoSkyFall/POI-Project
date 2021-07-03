@@ -1,0 +1,17 @@
+export const FETCH_ALL_POI = 'FETCH_ALL_POI';
+export const FETCH_ALL_POI_SUCCESS = 'FETCH_ALL_POI_SUCCESS';
+export const FETCH_ALL_POI_FAIL = 'FETCH_ALL_POI_FAIL';
+
+export const UPDATE_POI = 'UPDATE_POI';
+export const UPDATE_POI_SUCCESS = 'UPDATE_POI_SUCCESS';
+export const UPDATE_POI_FAIL = 'UPDATE_POI_FAIL';
+
+export const ADD_POI =  'ADD_POI';
+export const ADD_POI_SUCCESS =  'ADD_POI_SUCCESS';
+export const ADD_POI_FAIL =  'ADD_POI_FAIL';
+
+export const DELETE_POI = 'DELETE_POI';
+export const DELETE_POI_SUCCESS = 'DELETE_POI_SUCCESS';
+export const DELETE_POI_FAIL = 'DELETE_POI_FAIL';
+
+export const RESET_STORE = 'RESET_STORE';

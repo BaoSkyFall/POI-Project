@@ -11,8 +11,8 @@ import tripManagementReducer from "./customer/trip-management";
 import hashtagManagementReducer from "./customer/hashtag-management";
 import destinationManagementReducer from "./customer/destination-management";
 import destinationTypeManagementReducer from "./customer/destination-type-management";
-
-
+import poiManagementReducer from "./customer/poi";
+import poiTypeManagementReducer from "./customer/poi-type";
 
 
 import authReducer from "./auth";
@@ -41,5 +41,9 @@ export default combineReducers({
   tripManagementReducer,
   hashtagManagementReducer,
   destinationManagementReducer,
-  destinationTypeManagementReducer
+  destinationTypeManagementReducer,
+  poiManagementReducer,
+  poiTypeManagementReducer,
+
+
 });
