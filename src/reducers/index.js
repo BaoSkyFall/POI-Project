@@ -9,6 +9,10 @@ import userManagementReducer from "./customer/users-management";
 import visitManagementReducer from "./customer/visit-management";
 import tripManagementReducer from "./customer/trip-management";
 import hashtagManagementReducer from "./customer/hashtag-management";
+import destinationManagementReducer from "./customer/destination-management";
+import destinationTypeManagementReducer from "./customer/destination-type-management";
+
+
 
 
 import authReducer from "./auth";
@@ -36,4 +40,6 @@ export default combineReducers({
   visitManagementReducer,
   tripManagementReducer,
   hashtagManagementReducer,
+  destinationManagementReducer,
+  destinationTypeManagementReducer
 });

@@ -6,3 +6,7 @@ td.column-money {
 .transaction-history .ant-spin {
   height: 50vh !important;
 }
+.button-add
+{
+  margin-bottom: 15px;
+}

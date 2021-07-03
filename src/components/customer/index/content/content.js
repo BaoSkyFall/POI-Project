@@ -9,12 +9,8 @@ import UsersManagement from '../../../../containers/customer/users-management';
 import VisitManagement from '../../../../containers/customer/visit-management';
 import TripManagement from '../../../../containers/customer/trip-management';
 import HashTagManagement from '../../../../containers/customer/hashtag-management';
-
-
-
-
-
-
+import DestinationManagement from '../../../../containers/customer/destination-management';
+import DestinationTypeManagement from '../../../../containers/customer/destination-type-management';
 
 // import CloseWallet from '../../../../containers/customer/close-wallet';
 
@@ -107,8 +103,22 @@ export default class Content extends Component {
                     </React.Fragment>
                 );
             }
-
-
+            case MENUITEM.DESTINATION_MANAGEMENT: {
+                return content_layout = (
+                    <React.Fragment>
+                        <h2>Destination Management</h2>
+                        <DestinationManagement />
+                    </React.Fragment>
+                );
+            }
+            case MENUITEM.DESTINATION_TYPE: {
+                return content_layout = (
+                    <React.Fragment>
+                        <h2>Destination Type Management</h2>
+                        <DestinationTypeManagement />
+                    </React.Fragment>
+                );
+            }
             default: {
                 content_layout = (
                     <React.Fragment>

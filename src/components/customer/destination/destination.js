@@ -1,12 +1,12 @@
 import React from 'react';
-import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space } from 'antd';
+import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space,DatePicker } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
-import { WarningOutlined, CheckCircleOutlined, UserAddOutlined } from '@ant-design/icons';
+import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
 const layout = {
     labelCol: {
         span: 8,
@@ -21,8 +21,9 @@ const tailLayout = {
         span: 16,
     },
 };
+const { RangePicker } = DatePicker;
 
-class UsersManagement extends React.Component {
+class DestinationManagement extends React.Component {
     formRef = React.createRef();
     formRefAdd = React.createRef();
 
@@ -30,51 +31,44 @@ class UsersManagement extends React.Component {
         super(props);
 
         this.columns = [{
-            title: 'User ID',
-            dataIndex: 'userId',
+            title: 'Id',
+            dataIndex: 'destinationId',
             defaultSortOrder: 'descend',
             width: '18%',
-            sorter: (a, b) => a.userId.localeCompare(b.userId),
-        }, {
-            title: 'Username',
-            dataIndex: 'username',
+            sorter: (a, b) => a.destinationId.localeCompare(b.destinationId),
+        },
+        {
+            title: 'Name',
+            dataIndex: 'destinationName',
+            defaultSortOrder: 'descend',
             width: '18%',
-            defaultSortOrder: 'descend',
-            sorter: (a, b) => a.username.localeCompare(b.username),
-        }, {
-            title: 'First Name',
-            dataIndex: 'firstName',
-            defaultSortOrder: 'descend',
-            width: '20%',
+            sorter: (a, b) => a.destinationName.localeCompare(b.destinationName),
         },
         {
-            title: 'Last Name',
-            dataIndex: 'lastName',
+            title: 'Destination Type    ',
+            dataIndex: 'destinationType',
             defaultSortOrder: 'descend',
-            width: '20%',
+            width: '18%',
+            render: (destinationType) => (
+                <Space size="middle">
+                   {destinationType.name}
+                </Space>
+            )
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            defaultSortOrder: 'descend',
-            width: '20%',
-        },
-        {
-            title: 'Phone',
-            dataIndex: 'phone',
-            defaultSortOrder: 'descend',
-            width: '20%',
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            defaultSortOrder: 'descend',
-            width: '20%',
-            sorter: (a, b) => a.status.localeCompare(b.status),
-            render: (status) => (
-                <Tag color={status === 1 ? 'green' : 'volcano'} key={status === 1 ? 'Active' : 'Inactive'} size="middle">
-                    {status === 1 ? 'Active' : 'Inactive'}
-                </Tag>
+            title: 'HashTag',
+            dataIndex: 'hashTags',
+            width: '18%',
+            render: hashTags => (
+                <>
+                    {hashTags.map(hashtag => {
+                        return (
+                            <Tag color="blue" key={hashtag.shortName}>
+                                {hashtag.shortName}
+                            </Tag>
+                        );
+                    })}
+                </>
             ),
         },
         {
@@ -83,28 +77,24 @@ class UsersManagement extends React.Component {
             defaultSortOrder: 'descend',
             width: '15%',
             render: (record) => (
-
                 <Space size="middle">
-                    {
-                        record.status === 1 && record.roleId!=="35697b44-8db7-47d9-a7e3-694b3d5da5a0" ? <a onClick={() => this.onEditUser(record)}>Edit</a> : null
-                    }
-
-                    {
-                        record.status === 1 && record.roleId!=="35697b44-8db7-47d9-a7e3-694b3d5da5a0" ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeleteUser(record)}>
-                            <a>Inactive</a>
-                        </Popconfirm> : null
-                    }
+                <a onClick={() => this.onEditDestination(record)}>Edit</a>
+                {
+                    record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeleteDestination(record)}>
+                        <a>Inactive</a>
+                    </Popconfirm> : null
+                }
 
 
 
-                </Space>
+            </Space>
             )
         }];
 
         this.state = {
             accessToken: localStorage.getItem(ACCESS_TOKEN_KEY) || '',
             email: localStorage.getItem(EMAIL_KEY) || '',
-            userSelected: '',
+            destinationSelected: '',
             visibleUpdate: false,
             visibleAdd: false,
             confirmLoading: false,
@@ -112,8 +102,8 @@ class UsersManagement extends React.Component {
     }
 
 
-    onEditUser(values) {
-        this.setState({ visibleUpdate: true })
+    onEditDestination(values) {
+        this.setState({ visibleUpdate: true, destinationSelected: values })
         console.log('values:', values)
         setTimeout(() => {
             this.onFill(values)
@@ -122,22 +112,18 @@ class UsersManagement extends React.Component {
     handleCancelModal() {
 
         this.setState({ visibleUpdate: false })
-        // this.props.fetchAllUsers(this.state.accessToken);
+        // this.props.fetchAllDestination(this.state.accessToken);
 
     }
     onFinish = values => {
-        values.userId = this.state.userSelected.userId
-        values.username = this.state.userSelected.username
-        values.avatar = this.state.userSelected.avatar
+        values.DestinationId = this.state.destinationSelected.DestinationId
         this.handleCancelModal()
-        this.props.updateUser(this.state.accessToken, values)
+        this.props.updateDestination(this.state.accessToken, values)
     };
     onFinishAdd = values => {
         console.log('values:', values)
-        values.roleId = '3fa85f64-5717-4562-b3fc-2c963f66afa6'
-        values.avatar = null;
         this.setState({ visibleAdd: false })
-        this.props.addUser(this.state.accessToken, values)
+        this.props.addDestination(this.state.accessToken, values)
 
     }
     onReset = () => {
@@ -147,41 +133,41 @@ class UsersManagement extends React.Component {
     onFill = (data) => {
         if (this.formRef.current) {
             this.formRef.current.setFieldsValue({
-                firstName: data.firstName,
-                lastName: data.lastName,
-                email: data.email,
-                phone: data.phone,
+                name: data.name,
+                shortName: data.shortName,
+
             })
         }
 
 
 
     };
-    onAddUser() {
+    onAddDestination() {
         this.setState({ visibleAdd: true })
         if (this.formRefAdd.current) {
             this.formRefAdd.current.resetFields()
 
         }
     }
-    onDeleteUser(values) {
+    onDeleteDestination(values) {
         console.log('values:', values)
-        this.props.deleteUser(this.state.accessToken, values.userId)
+        this.props.deleteDestination(this.state.accessToken, values.userId)
     }
 
     componentDidUpdate() {
         const { isAction } = this.props
         if (isAction) {
-            this.props.fetchAllUsers(this.state.accessToken)
+            this.props.fetchAllDestination(this.state.accessToken)
         }
     }
     componentDidMount() {
         const { accessToken } = this.state;
-        this.props.fetchAllUsers(accessToken);
+        this.props.fetchAllDestination(accessToken);
     }
 
     render() {
-        const { isLoading, messageError, isAction, messageSuccess, listUsers } = this.props;
+        const { isLoading, messageError, isAction, messageSuccess, listDestination } = this.props;
+        console.log('listDestination:', listDestination)
         const { confirmLoading, visibleUpdate, visibleAdd } = this.state;
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
@@ -202,21 +188,21 @@ class UsersManagement extends React.Component {
                         icon: <CheckCircleOutlined style={{ color: 'green' }} />,
                     }) : null}
                 <Button className="button-add" onClick={() => {
-                    this.onAddUser()
-                }} type="primary" icon={<UserAddOutlined />}>
-                    Add New User
+                    this.onAddDestination()
+                }} type="primary" icon={<PlusSquareOutlined />}>
+                    Add New Destination
                 </Button>
 
                 <Table
                     columns={this.columns}
-                    dataSource={listUsers}
+                    dataSource={listDestination}
                     onChange={this.handleChange}
                     pagination={{ pageSize: 10 }}
                     scroll={{ y: '60vh' }}
                     bordered />
 
                 <Modal
-                    title="Update User"
+                    title="Update Destination"
                     visible={visibleUpdate}
                     onOk={
                         this.handleOk
@@ -233,8 +219,8 @@ class UsersManagement extends React.Component {
 
                     >
                         <Form.Item
-                            name="firstName"
-                            label="First Name"
+                            name="name"
+                            label="Name"
                             rules={[
                                 {
                                     required: true,
@@ -244,30 +230,8 @@ class UsersManagement extends React.Component {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="lastName"
-                            label="Last Name"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="email"
-                            label="Email"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="phone"
-                            label="Phone"
+                            name="shortName"
+                            label="Short Name"
                             rules={[
                                 {
                                     required: true,
@@ -289,7 +253,7 @@ class UsersManagement extends React.Component {
                 </Modal>
 
                 <Modal
-                    title="Add User"
+                    title="Add Destination"
                     visible={visibleAdd}
                     onOk={
                         this.handleOk
@@ -306,8 +270,8 @@ class UsersManagement extends React.Component {
 
                     >
                         <Form.Item
-                            name="username"
-                            label="Username"
+                            name="name"
+                            label="Name"
                             rules={[
                                 {
                                     required: true,
@@ -317,52 +281,8 @@ class UsersManagement extends React.Component {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="firstName"
-                            label="First Name"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="lastName"
-                            label="Last Name"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="email"
-                            label="Email"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="phone"
-                            label="Phone"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="password"
-                            label="Password"
+                            name="shortName"
+                            label="Short Name"
                             rules={[
                                 {
                                     required: true,
@@ -399,4 +319,4 @@ class UsersManagement extends React.Component {
         );
     }
 }
-export default UsersManagement;
+export default DestinationManagement;
