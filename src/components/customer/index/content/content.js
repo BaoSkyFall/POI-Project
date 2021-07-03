@@ -8,6 +8,8 @@ import DebtReminder from '../../../../containers/customer/debt-reminder';
 import UsersManagement from '../../../../containers/customer/users-management';
 import VisitManagement from '../../../../containers/customer/visit-management';
 import TripManagement from '../../../../containers/customer/trip-management';
+import HashTagManagement from '../../../../containers/customer/hashtag-management';
+
 
 
 
@@ -97,7 +99,14 @@ export default class Content extends Component {
                     </React.Fragment>
                 );
             }
-
+            case MENUITEM.HASHTAG: {
+                return content_layout = (
+                    <React.Fragment>
+                        <h2>Hashtag Management</h2>
+                        <HashTagManagement />
+                    </React.Fragment>
+                );
+            }
 
 
             default: {

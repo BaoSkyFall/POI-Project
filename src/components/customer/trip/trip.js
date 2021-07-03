@@ -6,7 +6,7 @@ import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
-import { WarningOutlined, InfoCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
 const layout = {
     labelCol: {
         span: 8,
@@ -186,7 +186,7 @@ class TripManagement extends React.Component {
                 {messageSuccess && isAction ?
                     notification.open({
                         message: messageSuccess,
-                        icon: <InfoCircleOutlined style={{ color: 'blue' }} />,
+                        icon: <CheckCircleOutlined style={{ color: 'green' }} />,
                     }) : null}
                 <Button className="button-add" onClick={() => {
                     this.onAddTrip()
