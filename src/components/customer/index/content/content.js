@@ -6,6 +6,8 @@ import SetupRecipient from '../../../../containers/customer/setup-recipient';
 import TransactionHistory from '../../../../containers/customer/transaction-history';
 import DebtReminder from '../../../../containers/customer/debt-reminder';
 import UsersManagement from '../../../../containers/customer/users-management';
+import VisitManagement from '../../../../containers/customer/visit-management';
+
 
 
 
@@ -77,6 +79,15 @@ export default class Content extends Component {
                     </React.Fragment>
                 );
             }
+            case MENUITEM.VISIT: {
+                return content_layout = (
+                    <React.Fragment>
+                        <h2>Visit Management</h2>
+                        <VisitManagement />
+                    </React.Fragment>
+                );
+            }
+            
 
             default: {
                 content_layout = (
