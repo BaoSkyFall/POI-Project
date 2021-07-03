@@ -7,6 +7,9 @@ import transactionHistoryReducer from "./customer/transaction-history";
 import debtReminderReducer from "./customer/debt-reminder";
 import userManagementReducer from "./customer/users-management";
 import visitManagementReducer from "./customer/visit-management";
+import tripManagementReducer from "./customer/trip-management";
+
+
 import authReducer from "./auth";
 import forgetPasswordReducer from "./forget-password";
 
@@ -30,5 +33,6 @@ export default combineReducers({
 
 
   userManagementReducer,
-  visitManagementReducer
+  visitManagementReducer,
+  tripManagementReducer
 });

@@ -7,6 +7,8 @@ import TransactionHistory from '../../../../containers/customer/transaction-hist
 import DebtReminder from '../../../../containers/customer/debt-reminder';
 import UsersManagement from '../../../../containers/customer/users-management';
 import VisitManagement from '../../../../containers/customer/visit-management';
+import TripManagement from '../../../../containers/customer/trip-management';
+
 
 
 
@@ -87,7 +89,16 @@ export default class Content extends Component {
                     </React.Fragment>
                 );
             }
-            
+            case MENUITEM.TRIP: {
+                return content_layout = (
+                    <React.Fragment>
+                        <h2>Trip Management</h2>
+                        <TripManagement />
+                    </React.Fragment>
+                );
+            }
+
+
 
             default: {
                 content_layout = (

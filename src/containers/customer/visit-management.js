@@ -5,11 +5,11 @@ import { fetchAllVisit,updateVisit, deleteVisit,addVisit,resetStore } from '../.
 
 const mapStateToProps = (state) => {
   return {
-    isLoading: state.userManagementReducer.isLoading,
-    listVisit: state.userManagementReducer.listVisit,
-    isAction: state.userManagementReducer.isAction,
-    messageError: state.userManagementReducer.messageError,
-    messageSuccess: state.userManagementReducer.messageSuccess,
+    isLoading: state.visitManagementReducer.isLoading,
+    listVisit: state.visitManagementReducer.listVisit,
+    isAction: state.visitManagementReducer.isAction,
+    messageError: state.visitManagementReducer.messageError,
+    messageSuccess: state.visitManagementReducer.messageSuccess,
   }
 };
 

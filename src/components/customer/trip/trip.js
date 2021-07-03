@@ -1,12 +1,12 @@
 import React from 'react';
-import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space } from 'antd';
+import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space,DatePicker } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
-import { WarningOutlined, InfoCircleOutlined, UserAddOutlined } from '@ant-design/icons';
+import { WarningOutlined, InfoCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
 const layout = {
     labelCol: {
         span: 8,
@@ -21,8 +21,9 @@ const tailLayout = {
         span: 16,
     },
 };
+const { RangePicker } = DatePicker;
 
-class VisitManagement extends React.Component {
+class TripManagement extends React.Component {
     formRef = React.createRef();
     formRefAdd = React.createRef();
 
@@ -30,51 +31,45 @@ class VisitManagement extends React.Component {
         super(props);
 
         this.columns = [{
-            title: 'User ID',
-            dataIndex: 'userId',
+            title: 'Trip ID',
+            dataIndex: 'tripId',
             defaultSortOrder: 'descend',
             width: '18%',
-            sorter: (a, b) => a.userId.localeCompare(b.userId),
+            sorter: (a, b) => a.tripId.localeCompare(b.tripId),
         }, {
-            title: 'Username',
-            dataIndex: 'username',
+            title: 'Trip name',
+            dataIndex: 'tripName',
             width: '18%',
             defaultSortOrder: 'descend',
-            sorter: (a, b) => a.username.localeCompare(b.username),
+            sorter: (a, b) => a.tripName.localeCompare(b.tripName),
         }, {
-            title: 'First Name',
-            dataIndex: 'firstName',
+            title: 'Start Time',
+            dataIndex: 'startTime',
+            defaultSortOrder: 'descend',
+            width: '20%',
+
+        },
+        {
+            title: 'End Time',
+            dataIndex: 'endTime',
             defaultSortOrder: 'descend',
             width: '20%',
         },
         {
-            title: 'Last Name',
-            dataIndex: 'lastName',
+            title: 'Destination',
+            dataIndex: 'destinations',
             defaultSortOrder: 'descend',
             width: '20%',
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            defaultSortOrder: 'descend',
-            width: '20%',
-        },
-        {
-            title: 'Phone',
-            dataIndex: 'phone',
-            defaultSortOrder: 'descend',
-            width: '20%',
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            defaultSortOrder: 'descend',
-            width: '20%',
-            sorter: (a, b) => a.status.localeCompare(b.status),
-            render: (status) => (
-                <Tag color={status === 1 ? 'green' : 'volcano'} key={status === 1 ? 'Active' : 'Inactive'} size="middle">
-                    {status === 1 ? 'Active' : 'Inactive'}
-                </Tag>
+            render: destinations => (
+                <>
+                    {destinations.map(des => {
+                        return (
+                            <Tag color="blue" key={des.destinationId}>
+                                {des.destinationName}
+                            </Tag>
+                        );
+                    })}
+                </>
             ),
         },
         {
@@ -84,9 +79,9 @@ class VisitManagement extends React.Component {
             width: '15%',
             render: (record) => (
                 <Space size="middle">
-                    <a onClick={() => this.onEditVisit(record)}>Edit</a>
+                    <a onClick={() => this.onEditTrip(record)}>Edit</a>
                     {
-                        record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeleteVisit(record)}>
+                        record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeleteTrip(record)}>
                             <a>Inactive</a>
                         </Popconfirm> : null
                     }
@@ -100,7 +95,7 @@ class VisitManagement extends React.Component {
         this.state = {
             accessToken: localStorage.getItem(ACCESS_TOKEN_KEY) || '',
             email: localStorage.getItem(EMAIL_KEY) || '',
-            visitSelected: '',
+            tripSelected: '',
             visibleUpdate: false,
             visibleAdd: false,
             confirmLoading: false,
@@ -108,8 +103,8 @@ class VisitManagement extends React.Component {
     }
 
 
-    onEditVisit(values) {
-        this.setState({ visibleUpdate: true })
+    onEditTrip(values) {
+        this.setState({ visibleUpdate: true, tripSelected: values })
         console.log('values:', values)
         setTimeout(() => {
             this.onFill(values)
@@ -118,22 +113,20 @@ class VisitManagement extends React.Component {
     handleCancelModal() {
 
         this.setState({ visibleUpdate: false })
-        // this.props.fetchAllVisit(this.state.accessToken);
+        // this.props.fetchAllTrip(this.state.accessToken);
 
     }
     onFinish = values => {
-        values.userId = this.state.visitSelected.userId
-        values.username = this.state.visitSelected.username
-        values.avatar = this.state.visitSelected.avatar
+        values.tripId = this.state.tripSelected.tripId
         this.handleCancelModal()
-        this.props.updateVisit(this.state.accessToken, values)
+        this.props.updateTrip(this.state.accessToken, values)
     };
     onFinishAdd = values => {
         console.log('values:', values)
         values.roleId = '3fa85f64-5717-4562-b3fc-2c963f66afa6'
         values.avatar = null;
         this.setState({ visibleAdd: false })
-        this.props.addVisit(this.state.accessToken, values)
+        // this.props.addUser(this.state.accessToken, values)
 
     }
     onReset = () => {
@@ -143,41 +136,39 @@ class VisitManagement extends React.Component {
     onFill = (data) => {
         if (this.formRef.current) {
             this.formRef.current.setFieldsValue({
-                firstName: data.firstName,
-                lastName: data.lastName,
-                email: data.email,
-                phone: data.phone,
+                tripName: data.tripName,
             })
         }
 
 
 
     };
-    onAddVisit() {
+    onAddTrip() {
         this.setState({ visibleAdd: true })
         if (this.formRefAdd.current) {
             this.formRefAdd.current.resetFields()
 
         }
     }
-    onDeleteVisit(values) {
+    onDeleteTrip(values) {
         console.log('values:', values)
-        this.props.deleteVisit(this.state.accessToken, values.userId)
+        this.props.deleteTrip(this.state.accessToken, values.userId)
     }
 
     componentDidUpdate() {
         const { isAction } = this.props
         if (isAction) {
-            this.props.fetchAllVisit(this.state.accessToken)
+            this.props.fetchAllTrip(this.state.accessToken)
         }
     }
     componentDidMount() {
         const { accessToken } = this.state;
-        this.props.fetchAllVisit(accessToken);
+        this.props.fetchAllTrip(accessToken);
     }
 
     render() {
-        const { isLoading, messageError, isAction, messageSuccess, listVisit } = this.props;
+        const { isLoading, messageError, isAction, messageSuccess, listTrip } = this.props;
+        console.log('this.props:', this.props)
         const { confirmLoading, visibleUpdate, visibleAdd } = this.state;
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
@@ -198,21 +189,21 @@ class VisitManagement extends React.Component {
                         icon: <InfoCircleOutlined style={{ color: 'blue' }} />,
                     }) : null}
                 <Button className="button-add" onClick={() => {
-                    this.onAddVisit()
-                }} type="primary" icon={<UserAddOutlined />}>
+                    this.onAddTrip()
+                }} type="primary" icon={<PlusSquareOutlined />}>
                     Add New Trip
                 </Button>
 
                 <Table
                     columns={this.columns}
-                    dataSource={listVisit}
+                    dataSource={listTrip}
                     onChange={this.handleChange}
                     pagination={{ pageSize: 10 }}
                     scroll={{ y: '60vh' }}
                     bordered />
 
                 <Modal
-                    title="Update User"
+                    title="Update Trip"
                     visible={visibleUpdate}
                     onOk={
                         this.handleOk
@@ -229,41 +220,8 @@ class VisitManagement extends React.Component {
 
                     >
                         <Form.Item
-                            name="firstName"
-                            label="First Name"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="lastName"
-                            label="Last Name"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="email"
-                            label="Email"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="phone"
-                            label="Phone"
+                            name="tripName"
+                            label="tripName"
                             rules={[
                                 {
                                     required: true,
@@ -285,7 +243,7 @@ class VisitManagement extends React.Component {
                 </Modal>
 
                 <Modal
-                    title="Add User"
+                    title="Add Trip"
                     visible={visibleAdd}
                     onOk={
                         this.handleOk
@@ -302,8 +260,8 @@ class VisitManagement extends React.Component {
 
                     >
                         <Form.Item
-                            name="username"
-                            label="Username"
+                            name="tripName"
+                            label="Trip Name"
                             rules={[
                                 {
                                     required: true,
@@ -313,60 +271,18 @@ class VisitManagement extends React.Component {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="firstName"
-                            label="First Name"
+                            name="time"
+                            label="Time"
                             rules={[
                                 {
                                     required: true,
                                 },
                             ]}
                         >
-                            <Input />
+                            <RangePicker showTime />
+
                         </Form.Item>
-                        <Form.Item
-                            name="lastName"
-                            label="Last Name"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="email"
-                            label="Email"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="phone"
-                            label="Phone"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="password"
-                            label="Password"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
+
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
                                 Add New
@@ -395,4 +311,4 @@ class VisitManagement extends React.Component {
         );
     }
 }
-export default VisitManagement;
+export default TripManagement;

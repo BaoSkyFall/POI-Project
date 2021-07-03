@@ -15,7 +15,7 @@
     "lodash": "^4.17.19",
     "lokka": "^1.7.0",
     "lokka-transport-http": "^1.6.1",
-    "moment": "^2.26.0",
+    "moment": "^2.29.1",
     "otp-input-react": "^0.2.1",
     "react": "^16.13.1",
     "react-countdown": "^2.2.1",

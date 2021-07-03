@@ -25,7 +25,7 @@ const fetchAllVisit = (accessToken) => {
                     console.log('res:', res.data)
                     dispatch({
                         type: FETCH_ALL_VISIT_SUCCESS,
-                        listUsers: res.data
+                        listTrip: res.data
                     });
                 }
             })
@@ -47,7 +47,7 @@ const addVisit = (accessToken, visit) => {
                     console.log('res:', res.data)
                     dispatch({
                         type: ADD_VISIT_SUCCESS,
-                        listUsers: res.data
+                        listTrip: res.data
                     });
                 }
                 else {
@@ -76,7 +76,7 @@ const updateVisit = (accessToken, visit) => {
                     console.log('res:', res.data)
                     dispatch({
                         type: UPDATE_VISIT_SUCCESS,
-                        listUsers: res.data,
+                        listTrip: res.data,
                         messageSuccess: 'Update Visit Success'
                     });
                 }
@@ -105,7 +105,7 @@ const deleteVisit = (accessToken, id) => {
                     console.log('res:', res.data)
                     dispatch({
                         type: DELETE_VISIT_SUCCESS,
-                        listUsers: res.data,
+                        listTrip: res.data,
                         messageSuccess: 'Inactive Visit Success'
 
                     });
