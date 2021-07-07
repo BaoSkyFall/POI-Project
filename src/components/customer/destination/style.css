@@ -22,3 +22,7 @@ td.column-money {
 {
   color: black;
 }
+input.input-file
+{
+  display: none;
+}

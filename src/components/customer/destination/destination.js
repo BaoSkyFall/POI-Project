@@ -1,12 +1,12 @@
 import React from 'react';
-import { Table, notification, Spin, Select, Image , InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space, DatePicker } from 'antd';
+import { Table, notification, Spin, Select, Image, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space, DatePicker } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
-import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined, UploadOutlined } from '@ant-design/icons';
 import { storage } from "../../../firebase/index";
 
 import * as _ from 'lodash'
@@ -28,11 +28,13 @@ const tailLayout = {
 };
 
 class DestinationManagement extends React.Component {
-    formRef = React.createRef();
-    formRefAdd = React.createRef();
+
 
     constructor(props) {
         super(props);
+        this.formRef = React.createRef();
+        this.formRefAdd = React.createRef();
+        this.inputRef = React.createRef();
 
         this.columns = [{
             title: 'Id',
@@ -130,6 +132,7 @@ class DestinationManagement extends React.Component {
             visibleUpdate: false,
             visibleAdd: false,
             confirmLoading: false,
+            imageView: null,
         }
     }
 
@@ -143,7 +146,7 @@ class DestinationManagement extends React.Component {
     handleCancelModal() {
 
         this.setState({ visibleUpdate: false })
-        // this.props.fetchAllDestination(this.state.accessToken);
+        this.props.fetchAllDestination(this.state.accessToken);
 
     }
     onFinish = values => {
@@ -154,6 +157,9 @@ class DestinationManagement extends React.Component {
             longtitude: values.longtitude
 
         }
+        values.imageUrl = this.state.imageView
+        console.log('values:', values)
+
         this.handleCancelModal()
         this.props.updateDestination(this.state.accessToken, values)
     };
@@ -176,6 +182,7 @@ class DestinationManagement extends React.Component {
                 destinationTypeId: data.destinationType.destinationTypeId,
                 imageUrl: data.imageUrl
             })
+            this.setState({ imageView: data.imageUrl })
         }
 
 
@@ -230,9 +237,38 @@ class DestinationManagement extends React.Component {
         //     // Handle any errors
         // });
     }
+    handleBtnClick() {
+        /*Collecting node-element and performing click*/
+        this.inputRef.click();
+
+    }
+    handleFileChange(e) {
+        /*Selected files data can be collected here.*/
+        console.log(e.target.files);
+        var input = e.target
+        const uploadTask = storage.ref(`destination/${this.state.destinationSelected.destinationId}`).put(e.target.files[0]);
+        uploadTask.on(
+            "state_changed",
+            snapshot => {
+            },
+            error => {
+                console.log(error);
+            },
+            () => {
+                storage
+                    .ref('destination')
+                    .child(this.state.destinationSelected.destinationId)
+                    .getDownloadURL()
+                    .then(url => {
+                        this.setState({ imageView: url })
+                    });
+            }
+
+        );
+    }
     render() {
         const { isLoading, messageError, isAction, messageSuccess, listDestination, listDestinationType, listProvince } = this.props;
-        const { confirmLoading, visibleUpdate, visibleAdd } = this.state;
+        const { confirmLoading, visibleUpdate, visibleAdd, imageView } = this.state;
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
             return (<Redirect to={{
@@ -282,6 +318,23 @@ class DestinationManagement extends React.Component {
                     <Form {...layout} ref={this.formRef} name="control-hooks" onFinish={this.onFinish}
 
                     >
+                        <Form.Item
+
+                            label="Image"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Image src={imageView} />
+                            <input style={{ display: 'none' }} className="input-file" ref={input => this.inputRef = input} onChange={(e) => { this.handleFileChange(e) }} type="file" />
+                            <Button onClick={() => {
+                                this.handleBtnClick()
+                            }} type="primary" size="'large'" icon={<UploadOutlined />}>
+                                Upload
+                            </Button>
+                        </Form.Item>
                         <Form.Item
                             name="destinationName"
                             label="Name"

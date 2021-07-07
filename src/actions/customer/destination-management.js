@@ -32,34 +32,38 @@ const fetchAllDestination = (accessToken) => {
                         el.startTime = moment(new Date(el.startTime)).format("DD/MM/YYYY - hh:mm")
                         el.endTime = moment(new Date(el.endTime)).format("DD/MM/YYYY - hh:mm")
                     })
-                    storage
-                        .ref("destination")
-                        .listAll()
-                        .then(result => {
-                            // setUrl(result);
+                    dispatch({
+                        type: FETCH_ALL_DESTINATION_SUCCESS,
+                        listDestination: res.data
+                    });
+                    // storage
+                    //     .ref("destination")
+                    //     .listAll()
+                    //     .then(result => {
+                    //         // setUrl(result);
 
-                            result.items.forEach((itemRef) => {
-                                mapDisplayImage(itemRef);
-                                const index = _.findIndex(res.data, o => {
-                                    return itemRef.name.includes(o.destinationId)
-                                })
-                                console.log('index:', index)
-                                if (index !== -1) {
-                                    itemRef.getDownloadURL().then(function (url) {
-                                        res.data[index].imageUrl = url
-                                    })
-                                }
-                                // All the items under listRef.
-                            });
-                            setTimeout(() => {
-                                console.log('res:', res.data)
-                                dispatch({
-                                    type: FETCH_ALL_DESTINATION_SUCCESS,
-                                    listDestination: res.data
-                                });
-                            }, 500)
+                    //         result.items.forEach((itemRef) => {
+                    //             mapDisplayImage(itemRef);
+                    //             const index = _.findIndex(res.data, o => {
+                    //                 return itemRef.name.includes(o.destinationId)
+                    //             })
+                    //             console.log('index:', index)
+                    //             if (index !== -1) {
+                    //                 itemRef.getDownloadURL().then(function (url) {
+                    //                     res.data[index].imageUrl = url
+                    //                 })
+                    //             }
+                    //             // All the items under listRef.
+                    //         });
+                    //         setTimeout(() => {
+                    //             console.log('res:', res.data)
+                    //             dispatch({
+                    //                 type: FETCH_ALL_DESTINATION_SUCCESS,
+                    //                 listDestination: res.data
+                    //             });
+                    //         }, 500)
 
-                        });
+                    //     });
 
                 }
             })
