@@ -10,3 +10,15 @@ td.column-money {
 {
   margin-bottom: 15px;
 }
+.space-column
+{
+
+}
+.image-column
+{
+  max-width: 150px;
+}
+.ant-select-selection-item
+{
+  color: black;
+}

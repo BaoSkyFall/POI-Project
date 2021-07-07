@@ -14,19 +14,19 @@ import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase'
 import { createFirestoreInstance } from 'redux-firestore'
-const firebase = require("firebase");
-require("firebase/firestore"); // Required for side-effects?????
+// const firebase = require("firebase");
+// require("firebase/firestore"); // Required for side-effects?????
 
-firebase.initializeApp({
-    apiKey: "AIzaSyDKPisSU7KUgmNWYuey8XJP4KRtfauTgVA",
-    authDomain: "internetbanking-4c113.firebaseapp.com",
-    databaseURL: "https://internetbanking-4c113.firebaseio.com",
-    projectId: "internetbanking-4c113",
-    storageBucket: "internetbanking-4c113.appspot.com",
-    messagingSenderId: "761677647821",
-    appId: "1:761677647821:web:eba005684812d63fcf3e84",
-    measurementId: "G-5WB3XB3D00"
-});
+// firebase.initializeApp({
+//     apiKey: "AIzaSyDayY0rT7oju0wAJmawM4jfr97MCEBONQc",
+//     authDomain: "poi-swd.firebaseapp.com",
+//     projectId: "poi-swd",
+//     storageBucket: "poi-swd.appspot.com",
+//     messagingSenderId: "346708218094",
+//     appId: "1:346708218094:web:6d93917fba10350a0ee3ff",
+//     measurementId: "G-TELKB81FGY"
+// });
+// firebase.firestore();
 
 const middleware = [thunk, logger];
 const store = createStore(reducer, applyMiddleware(...middleware));

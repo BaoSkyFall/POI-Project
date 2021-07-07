@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space,DatePicker } from 'antd';
+import { Table, notification, Spin, Select, Image , InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space, DatePicker } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
@@ -7,6 +7,11 @@ import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
 import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { storage } from "../../../firebase/index";
+
+import * as _ from 'lodash'
+const { Option } = Select;
+
 const layout = {
     labelCol: {
         span: 8,
@@ -21,7 +26,6 @@ const tailLayout = {
         span: 16,
     },
 };
-const { RangePicker } = DatePicker;
 
 class DestinationManagement extends React.Component {
     formRef = React.createRef();
@@ -34,8 +38,24 @@ class DestinationManagement extends React.Component {
             title: 'Id',
             dataIndex: 'destinationId',
             defaultSortOrder: 'descend',
+            align: 'center',
             width: '18%',
             sorter: (a, b) => a.destinationId.localeCompare(b.destinationId),
+        },
+        {
+            title: 'Image',
+            dataIndex: 'imageUrl',
+            defaultSortOrder: 'descend',
+            width: '18%',
+            render: (imageUrl) => (
+                <Space className="space-column" size="middle">
+                    <Image
+                        width={200}
+                        src={imageUrl}
+                    />
+                    {/* <img className="image-column" src={imageUrl} alt=""></img> */}
+                </Space>
+            )
         },
         {
             title: 'Name',
@@ -45,16 +65,28 @@ class DestinationManagement extends React.Component {
             sorter: (a, b) => a.destinationName.localeCompare(b.destinationName),
         },
         {
-            title: 'Destination Type    ',
+            title: 'Province',
+            dataIndex: 'province',
+            defaultSortOrder: 'descend',
+            width: '18%',
+            render: (province) => (
+                <Space size="middle">
+                    {province.name}
+                </Space>
+            )
+        },
+        {
+            title: 'Destination Type',
             dataIndex: 'destinationType',
             defaultSortOrder: 'descend',
             width: '18%',
             render: (destinationType) => (
                 <Space size="middle">
-                   {destinationType.name}
+                    {destinationType.name}
                 </Space>
             )
         },
+
         {
             title: 'HashTag',
             dataIndex: 'hashTags',
@@ -78,16 +110,16 @@ class DestinationManagement extends React.Component {
             width: '15%',
             render: (record) => (
                 <Space size="middle">
-                <a onClick={() => this.onEditDestination(record)}>Edit</a>
-                {
-                    record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeleteDestination(record)}>
-                        <a>Inactive</a>
-                    </Popconfirm> : null
-                }
+                    <a onClick={() => this.onEditDestination(record)}>Edit</a>
+                    {
+                        record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeleteDestination(record)}>
+                            <a>Inactive</a>
+                        </Popconfirm> : null
+                    }
 
 
 
-            </Space>
+                </Space>
             )
         }];
 
@@ -104,7 +136,6 @@ class DestinationManagement extends React.Component {
 
     onEditDestination(values) {
         this.setState({ visibleUpdate: true, destinationSelected: values })
-        console.log('values:', values)
         setTimeout(() => {
             this.onFill(values)
         }, 100)
@@ -116,12 +147,17 @@ class DestinationManagement extends React.Component {
 
     }
     onFinish = values => {
-        values.DestinationId = this.state.destinationSelected.DestinationId
+        values.destinationId = this.state.destinationSelected.destinationId
+        console.log('values:', values)
+        values.location = {
+            latitude: values.latitude,
+            longtitude: values.longtitude
+
+        }
         this.handleCancelModal()
         this.props.updateDestination(this.state.accessToken, values)
     };
     onFinishAdd = values => {
-        console.log('values:', values)
         this.setState({ visibleAdd: false })
         this.props.addDestination(this.state.accessToken, values)
 
@@ -133,9 +169,12 @@ class DestinationManagement extends React.Component {
     onFill = (data) => {
         if (this.formRef.current) {
             this.formRef.current.setFieldsValue({
-                name: data.name,
-                shortName: data.shortName,
-
+                destinationName: data.destinationName,
+                latitude: data.location.latitude,
+                longtitude: data.location.longtitude,
+                provinceId: data.province.provinceId,
+                destinationTypeId: data.destinationType.destinationTypeId,
+                imageUrl: data.imageUrl
             })
         }
 
@@ -150,7 +189,6 @@ class DestinationManagement extends React.Component {
         }
     }
     onDeleteDestination(values) {
-        console.log('values:', values)
         this.props.deleteDestination(this.state.accessToken, values.userId)
     }
 
@@ -163,11 +201,37 @@ class DestinationManagement extends React.Component {
     componentDidMount() {
         const { accessToken } = this.state;
         this.props.fetchAllDestination(accessToken);
-    }
+        this.props.fetchAllDestinationType(this.state.accessToken)
+        this.props.fetchAllProvince(this.state.accessToken)
+        // setTimeout(() => {
+        //     storage
+        //         .ref("destination")
+        //         .listAll()
+        //         .then(res => {
+        //             // setUrl(res);
+        //             console.log('res:', res)
+        //             res.items.forEach((itemRef) => {
+        //                 console.log('itemRef:', itemRef)
+        //                 this.mapDisplayImage(itemRef);
 
+        //                 // All the items under listRef.
+        //             });
+        //         });
+        // }, 300)
+
+    }
+    mapDisplayImage(imageRef) {
+
+        // imageRef.getDownloadURL().then(function (url) {
+        //     console.log('url:', url)
+
+        //     // TODO: Display the image on the UI
+        // }).catch(function (error) {
+        //     // Handle any errors
+        // });
+    }
     render() {
-        const { isLoading, messageError, isAction, messageSuccess, listDestination } = this.props;
-        console.log('listDestination:', listDestination)
+        const { isLoading, messageError, isAction, messageSuccess, listDestination, listDestinationType, listProvince } = this.props;
         const { confirmLoading, visibleUpdate, visibleAdd } = this.state;
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
@@ -219,7 +283,7 @@ class DestinationManagement extends React.Component {
 
                     >
                         <Form.Item
-                            name="name"
+                            name="destinationName"
                             label="Name"
                             rules={[
                                 {
@@ -230,8 +294,8 @@ class DestinationManagement extends React.Component {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="shortName"
-                            label="Short Name"
+                            name="latitude"
+                            label="Latitude"
                             rules={[
                                 {
                                     required: true,
@@ -239,6 +303,66 @@ class DestinationManagement extends React.Component {
                             ]}
                         >
                             <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="latitude"
+                            label="Latitude"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="longtitude"
+                            label="Longtitude"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="provinceId"
+                            label="Province"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: '100%' }}
+                            >
+                                {listProvince.map(item => (
+                                    <Select.Option key={item.provinceId} value={item.provinceId}>
+                                        {item.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="destinationTypeId"
+                            label="Destination Type"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: '100%' }}
+                            >
+                                {listDestinationType.map(item => (
+                                    <Select.Option key={item.destinationTypeId} value={item.destinationTypeId}>
+                                        {item.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
@@ -270,7 +394,7 @@ class DestinationManagement extends React.Component {
 
                     >
                         <Form.Item
-                            name="name"
+                            name="destinationName"
                             label="Name"
                             rules={[
                                 {
@@ -281,8 +405,8 @@ class DestinationManagement extends React.Component {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="shortName"
-                            label="Short Name"
+                            name="latitude"
+                            label="Latitude"
                             rules={[
                                 {
                                     required: true,

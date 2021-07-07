@@ -2,6 +2,9 @@ import {
     FETCH_ALL_DESTINATION,
     FETCH_ALL_DESTINATION_SUCCESS,
     FETCH_ALL_DESTINATION_FAIL,
+    FETCH_ALL_PROVINCE,
+    FETCH_ALL_PROVINCE_SUCCESS,
+    FETCH_ALL_PROVINCE_FAIL,
     UPDATE_DESTINATION,
     UPDATE_DESTINATION_SUCCESS,
     UPDATE_DESTINATION_FAIL,
@@ -16,6 +19,7 @@ import {
 
 const initialState = {
     listDestination: [],
+    listProvince:[],
     isAction: false,
     messageError: '',
     messageSuccess: '',
@@ -54,6 +58,37 @@ export default function destinationManagementReducer(state = initialState, actio
 
             }
         }
+        case FETCH_ALL_PROVINCE: {
+            return {
+                ...state,
+                isLoading: true,
+                messageSuccess:'',
+                messageError:'',
+                isAction: false,
+            }
+        }
+        case FETCH_ALL_PROVINCE_SUCCESS: {
+            return {
+                ...state,
+                listProvince: action.listProvince,
+                messageSuccess:'',
+                messageError:'',
+                isLoading: false,
+                isAction: false,
+
+            }
+        }
+        case FETCH_ALL_PROVINCE_FAIL: {
+            return {
+                ...state,
+                messageSuccess:'',
+                messageError: action.messageError,
+                isLoading: false,
+                isAction: false,
+
+            }
+        }
+        
         case UPDATE_DESTINATION: {
             return {
                 ...state,

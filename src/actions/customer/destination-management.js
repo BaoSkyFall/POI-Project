@@ -11,11 +11,15 @@ import {
     DELETE_DESTINATION,
     DELETE_DESTINATION_SUCCESS,
     DELETE_DESTINATION_FAIL,
+    FETCH_ALL_PROVINCE,
+    FETCH_ALL_PROVINCE_SUCCESS,
+    FETCH_ALL_PROVINCE_FAIL,
     RESET_STORE
 } from '../../constants/customer/destination-management';
 import callApi from '../../ultis/callApi';
 import moment from 'moment';
-
+import { storage } from "../../firebase/index";
+import * as _ from 'lodash'
 
 const fetchAllDestination = (accessToken) => {
     return (dispatch) => {
@@ -28,10 +32,35 @@ const fetchAllDestination = (accessToken) => {
                         el.startTime = moment(new Date(el.startTime)).format("DD/MM/YYYY - hh:mm")
                         el.endTime = moment(new Date(el.endTime)).format("DD/MM/YYYY - hh:mm")
                     })
-                    dispatch({
-                        type: FETCH_ALL_DESTINATION_SUCCESS,
-                        listDestination: res.data
-                    });
+                    storage
+                        .ref("destination")
+                        .listAll()
+                        .then(result => {
+                            // setUrl(result);
+
+                            result.items.forEach((itemRef) => {
+                                mapDisplayImage(itemRef);
+                                const index = _.findIndex(res.data, o => {
+                                    return itemRef.name.includes(o.destinationId)
+                                })
+                                console.log('index:', index)
+                                if (index !== -1) {
+                                    itemRef.getDownloadURL().then(function (url) {
+                                        res.data[index].imageUrl = url
+                                    })
+                                }
+                                // All the items under listRef.
+                            });
+                            setTimeout(() => {
+                                console.log('res:', res.data)
+                                dispatch({
+                                    type: FETCH_ALL_DESTINATION_SUCCESS,
+                                    listDestination: res.data
+                                });
+                            }, 500)
+
+                        });
+
                 }
             })
             .catch(error => {
@@ -42,7 +71,35 @@ const fetchAllDestination = (accessToken) => {
             })
     }
 }
+const fetchAllProvince = (accessToken) => {
+    return (dispatch) => {
+        dispatch({ type: FETCH_ALL_PROVINCE });
+        return callApi(`api/Province`, 'GET', {}, { Authorization: 'Bearer ' + accessToken })
+            .then(res => {
+                if (res.status === 200) {
+                    console.log('res:', res.data)
+                    dispatch({
+                        type: FETCH_ALL_PROVINCE_SUCCESS,
+                        listProvince: res.data
+                    });
+                }
+            })
+            .catch(error => {
+                dispatch({
+                    type: FETCH_ALL_PROVINCE_FAIL,
+                    messageError: "Server's error"
+                });
+            })
+    }
+}
+const mapDisplayImage = (imageRef) => {
 
+    imageRef.getDownloadURL().then(function (url) {
+        console.log('url:', url)
+
+    }).catch(function (error) {
+    });
+}
 const addDestination = (accessToken, Destination) => {
     return (dispatch) => {
         dispatch({ type: ADD_DESTINATION });
@@ -81,7 +138,6 @@ const updateDestination = (accessToken, destination) => {
                     console.log('res:', res.data)
                     dispatch({
                         type: UPDATE_DESTINATION_SUCCESS,
-                        listDestination: res.data,
                         messageSuccess: 'Update Destination Success'
                     });
                 }
@@ -145,5 +201,6 @@ export {
     updateDestination,
     deleteDestination,
     addDestination,
+    fetchAllProvince,
     resetStore
 }
