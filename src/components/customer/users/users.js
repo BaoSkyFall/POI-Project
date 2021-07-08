@@ -72,8 +72,8 @@ class UsersManagement extends React.Component {
             width: '20%',
             sorter: (a, b) => a.status.localeCompare(b.status),
             render: (status) => (
-                <Tag color={status === 1 ? 'green' : 'volcano'} key={status === 1 ? 'Active' : 'Inactive'} size="middle">
-                    {status === 1 ? 'Active' : 'Inactive'}
+                <Tag color={status === 1 ? 'green' : status === 0? 'volcano': 'blue'} key={status === 1 ? 'Active' : status === 0?'Inactive': 'Pending'} size="middle">
+                    {status === 1 ? 'Active' : status === 0?'Inactive': 'Pending'}
                 </Tag>
             ),
         },

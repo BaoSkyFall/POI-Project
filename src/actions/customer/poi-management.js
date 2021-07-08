@@ -11,6 +11,9 @@ import {
     DELETE_POI,
     DELETE_POI_SUCCESS,
     DELETE_POI_FAIL,
+    ACTIVE_POI,
+    ACTIVE_POI_SUCCESS,
+    ACTIVE_POI_FAIL,
     RESET_STORE
 } from '../../constants/customer/poi';
 import callApi from '../../ultis/callApi';
@@ -18,10 +21,10 @@ import { storage } from "../../firebase/index";
 const fetchAllPOI = (accessToken) => {
     return (dispatch) => {
         dispatch({ type: FETCH_ALL_POI });
-        return callApi(`api/Poi`, 'GET', {}, { Authorization: 'Bearer ' + accessToken })
+        return callApi(`api/Poi`, 'GET', {}, { Authorization: 'Bearer ' + accessToken,'X-Pagination': JSON.stringify({"PageSize":999,"CurrentPageIndex":1})
+})
             .then(res => {
                 if (res.status === 200) {
-                    console.log('res:', res.data)
                     dispatch({
                         type: FETCH_ALL_POI_SUCCESS,
                         listPOI: res.data
@@ -149,7 +152,35 @@ const updatePOI = (accessToken, destination) => {
             })
     }
 }
+const activePOI = (accessToken, id) => {
+    return (dispatch) => {
+        dispatch({ type: ACTIVE_POI });
+        return callApi(`api/Poi/approve/${id}`, 'DELETE', {}, { Authorization: 'Bearer ' + accessToken })
+            .then(res => {
+                if (res.status === 200) {
+                    console.log('res:', res.data)
+                    dispatch({
+                        type: ACTIVE_POI_SUCCESS,
+                        listPOIType: res.data,
+                        messageSuccess: 'Inactive POI Type Success'
 
+                    });
+                }
+                else {
+                    dispatch({
+                        type: ACTIVE_POI_FAIL,
+                        messageError: "Inactive POI Type Fail"
+                    });
+                }
+            })
+            .catch(error => {
+                dispatch({
+                    type: ACTIVE_POI_FAIL,
+                    messageError: error + " Inactive POI Type Fail"
+                });
+            })
+    }
+}
 const deletePOI = (accessToken, id) => {
     return (dispatch) => {
         dispatch({ type: DELETE_POI });
@@ -193,6 +224,7 @@ export {
     fetchAllPOI,
     updatePOI,
     deletePOI,
+    activePOI,
     addPOI,
     resetStore
 }

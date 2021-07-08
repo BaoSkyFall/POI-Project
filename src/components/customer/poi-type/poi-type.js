@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space,DatePicker } from 'antd';
+import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space, DatePicker } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
@@ -51,8 +51,8 @@ class POITypeManagement extends React.Component {
             width: '20%',
             sorter: (a, b) => a.status.localeCompare(b.status),
             render: (status) => (
-                <Tag color={status === 1 ? 'green' : 'volcano'} key={status === 1 ? 'Active' : 'Inactive'} size="middle">
-                    {status === 1 ? 'Active' : 'Inactive'}
+                <Tag color={status === 1 ? 'green' : status === 0 ? 'volcano' : 'blue'} key={status === 1 ? 'Active' : status === 0 ? 'Inactive' : 'Pending'} size="middle">
+                    {status === 1 ? 'Active' : status === 0 ? 'Inactive' : 'Pending'}
                 </Tag>
             ),
         },
@@ -63,16 +63,16 @@ class POITypeManagement extends React.Component {
             width: '15%',
             render: (record) => (
                 <Space size="middle">
-                <a onClick={() => this.onEditPOIType(record)}>Edit</a>
-                {
-                    record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeletePOIType(record)}>
-                        <a>Inactive</a>
-                    </Popconfirm> : null
-                }
+                    <a onClick={() => this.onEditPOIType(record)}>Edit</a>
+                    {
+                        record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeletePOIType(record)}>
+                            <a>Inactive</a>
+                        </Popconfirm> : null
+                    }
 
 
 
-            </Space>
+                </Space>
             )
         }];
 

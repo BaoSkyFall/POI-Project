@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import POIManagement from '../../components/customer/poi/poi';
-import { fetchAllPOI,updatePOI, deletePOI,addPOI,resetStore } from '../../actions/customer/poi-management';
+import { fetchAllPOI,updatePOI, deletePOI,addPOI,resetStore,activePOI} from '../../actions/customer/poi-management';
 import { fetchAllPOIType} from '../../actions/customer/poi-type-management';
 import { fetchAllDestination} from '../../actions/customer/destination-management';
 
@@ -25,6 +25,7 @@ const mapDispatchToProps = (dispatch) => {
     updatePOI: (accessToken,trip) => dispatch(updatePOI(accessToken,trip)),
     deletePOI: (accessToken,id) => dispatch(deletePOI(accessToken,id)),
     addPOI: (accessToken,poi,image) => dispatch(addPOI(accessToken,poi,image)),
+    activePOI: (accessToken,id) => dispatch(activePOI(accessToken,id)),
     resetStore: () => dispatch(resetStore())
   }
 }

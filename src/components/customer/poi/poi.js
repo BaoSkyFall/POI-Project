@@ -107,6 +107,18 @@ class POIManagement extends React.Component {
             ),
         },
         {
+            title: 'Status',
+            dataIndex: 'status',
+            defaultSortOrder: 'descend',
+            width: '20%',
+            sorter: (a, b) => a.status.localeCompare(b.status),
+            render: (status) => (
+                <Tag color={status === 1 ? 'green' : status === 0 ? 'volcano' : 'blue'} key={status === 1 ? 'Active' : status === 0 ? 'Inactive' : 'Pending'} size="middle">
+                    {status === 1 ? 'Active' : status === 0 ? 'Inactive' : 'Pending'}
+                </Tag>
+            ),
+        },
+        {
             title: 'Action',
             key: 'action',
             defaultSortOrder: 'descend',
@@ -117,6 +129,8 @@ class POIManagement extends React.Component {
                     {
                         record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeletePOI(record)}>
                             <a>Inactive</a>
+                        </Popconfirm> : record.status === 2 ? <Popconfirm title="Sure to Active?" onConfirm={() => this.onActivePOI(record)}>
+                            <a>Active</a>
                         </Popconfirm> : null
                     }
 
@@ -138,7 +152,10 @@ class POIManagement extends React.Component {
         }
     }
 
+    onActivePOI(values) {
+        this.props.activePOI(this.state.accessToken, values.poiId)
 
+    }
     onEditPOI(values) {
         this.setState({ visibleUpdate: true, poiSelected: values })
         console.log('values:', values)
@@ -169,7 +186,7 @@ class POIManagement extends React.Component {
             latitude: values.latitude,
             longtitude: values.longtitude
         }
-        this.props.addPOI(this.state.accessToken, values,this.state.imageAdd)
+        this.props.addPOI(this.state.accessToken, values, this.state.imageAdd)
 
     }
     onReset = () => {

@@ -14,4 +14,10 @@ export const DELETE_POI = 'DELETE_POI';
 export const DELETE_POI_SUCCESS = 'DELETE_POI_SUCCESS';
 export const DELETE_POI_FAIL = 'DELETE_POI_FAIL';
 
+
+
+export const ACTIVE_POI = 'ACTIVE_POI';
+export const ACTIVE_POI_SUCCESS = 'ACTIVE_POI_SUCCESS';
+export const ACTIVE_POI_FAIL = 'ACTIVE_POI_FAIL';
+
 export const RESET_STORE = 'RESET_STORE';
