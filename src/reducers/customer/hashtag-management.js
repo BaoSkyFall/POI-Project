@@ -63,7 +63,6 @@ export default function hashtagManagementReducer(state = initialState, action) {
         case UPDATE_HASHTAG_SUCCESS: {
             return {
                 ...state,
-                listHashTa: action.listHashTa,
                 isAction: true,
                 isLoading: false,
                 messageSuccess: action.messageSuccess,
@@ -88,7 +87,6 @@ export default function hashtagManagementReducer(state = initialState, action) {
         case ADD_HASHTAG_SUCCESS: {
             return {
                 ...state,
-                listHashTa: action.listHashTa,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isAction: true,
@@ -114,7 +112,6 @@ export default function hashtagManagementReducer(state = initialState, action) {
         case DELETE_HASHTAG_SUCCESS: {
             return {
                 ...state,
-                listHashTa: action.listHashTa,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isLoading: false,

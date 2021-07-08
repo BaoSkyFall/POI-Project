@@ -63,7 +63,6 @@ export default function userManagementReducer(state = initialState, action) {
         case UPDATE_USER_SUCCESS: {
             return {
                 ...state,
-                listUsers: action.listUsers,
                 isAction: true,
                 isLoading: false,
                 messageSuccess: action.messageSuccess,
@@ -88,7 +87,6 @@ export default function userManagementReducer(state = initialState, action) {
         case ADD_USER_SUCCESS: {
             return {
                 ...state,
-                listUsers: action.listUsers,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isAction: true,
@@ -114,7 +112,6 @@ export default function userManagementReducer(state = initialState, action) {
         case DELETE_USER_SUCCESS: {
             return {
                 ...state,
-                listUsers: action.listUsers,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isLoading: false,

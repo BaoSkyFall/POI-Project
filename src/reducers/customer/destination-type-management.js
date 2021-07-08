@@ -63,7 +63,6 @@ export default function destinationTypeManagementReducer(state = initialState, a
         case UPDATE_DESTINATION_TYPE_SUCCESS: {
             return {
                 ...state,
-                listDestinationType: action.listDestinationType,
                 isAction: true,
                 isLoading: false,
                 messageSuccess: action.messageSuccess,
@@ -88,7 +87,6 @@ export default function destinationTypeManagementReducer(state = initialState, a
         case ADD_DESTINATION_TYPE_SUCCESS: {
             return {
                 ...state,
-                listDestinationType: action.listDestinationType,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isAction: true,
@@ -114,7 +112,6 @@ export default function destinationTypeManagementReducer(state = initialState, a
         case DELETE_DESTINATION_TYPE_SUCCESS: {
             return {
                 ...state,
-                listDestinationType: action.listDestinationType,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isLoading: false,

@@ -98,7 +98,6 @@ export default function destinationManagementReducer(state = initialState, actio
         case UPDATE_DESTINATION_SUCCESS: {
             return {
                 ...state,
-                listDestination: action.listDestination,
                 isAction: true,
                 isLoading: false,
                 messageSuccess: action.messageSuccess,
@@ -123,7 +122,6 @@ export default function destinationManagementReducer(state = initialState, actio
         case ADD_DESTINATION_SUCCESS: {
             return {
                 ...state,
-                listDestination: action.listDestination,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isAction: true,
@@ -149,7 +147,6 @@ export default function destinationManagementReducer(state = initialState, actio
         case DELETE_DESTINATION_SUCCESS: {
             return {
                 ...state,
-                listDestination: action.listDestination,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isLoading: false,

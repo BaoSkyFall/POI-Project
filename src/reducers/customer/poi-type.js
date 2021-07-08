@@ -88,7 +88,6 @@ export default function poiTypeManagementReducer(state = initialState, action) {
         case ADD_POI_TYPE_SUCCESS: {
             return {
                 ...state,
-                listPOIType: action.listPOIType,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isAction: true,
@@ -114,7 +113,6 @@ export default function poiTypeManagementReducer(state = initialState, action) {
         case DELETE_POI_TYPE_SUCCESS: {
             return {
                 ...state,
-                listPOIType: action.listPOIType,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isLoading: false,

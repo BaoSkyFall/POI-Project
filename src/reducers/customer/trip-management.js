@@ -63,7 +63,6 @@ export default function tripManagementReducer(state = initialState, action) {
         case UPDATE_TRIP_SUCCESS: {
             return {
                 ...state,
-                listTrip: action.listTrip,
                 isAction: true,
                 isLoading: false,
                 messageSuccess: action.messageSuccess,
@@ -88,7 +87,6 @@ export default function tripManagementReducer(state = initialState, action) {
         case ADD_TRIP_SUCCESS: {
             return {
                 ...state,
-                listTrip: action.listTrip,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isAction: true,
@@ -114,7 +112,6 @@ export default function tripManagementReducer(state = initialState, action) {
         case DELETE_TRIP_SUCCESS: {
             return {
                 ...state,
-                listTrip: action.listTrip,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isLoading: false,

@@ -11,6 +11,9 @@ import {
     DELETE_POI,
     DELETE_POI_SUCCESS,
     DELETE_POI_FAIL,
+    ACTIVE_POI,
+    ACTIVE_POI_SUCCESS,
+    ACTIVE_POI_FAIL,
     RESET_STORE
 } from '../../constants/customer/poi';
 
@@ -63,7 +66,6 @@ export default function poiManagementReducer(state = initialState, action) {
         case UPDATE_POI_SUCCESS: {
             return {
                 ...state,
-                listPOI: action.listPOI,
                 isAction: true,
                 isLoading: false,
                 messageSuccess: action.messageSuccess,
@@ -88,7 +90,6 @@ export default function poiManagementReducer(state = initialState, action) {
         case ADD_POI_SUCCESS: {
             return {
                 ...state,
-                listPOI: action.listPOI,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isAction: true,
@@ -114,7 +115,6 @@ export default function poiManagementReducer(state = initialState, action) {
         case DELETE_POI_SUCCESS: {
             return {
                 ...state,
-                listPOI: action.listPOI,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isLoading: false,
@@ -123,6 +123,32 @@ export default function poiManagementReducer(state = initialState, action) {
             }
         }
         case DELETE_POI_FAIL: {
+            return {
+                ...state,
+                messageSuccess: '',
+                messageError: action.messageError,
+                isLoading: false,
+                isAction: true,
+
+            }
+        }
+        case ACTIVE_POI: {
+            return {
+                ...state,
+                isLoading: true,
+            }
+        }
+        case ACTIVE_POI_SUCCESS: {
+            return {
+                ...state,
+                messageSuccess: action.messageSuccess,
+                messageError: '',
+                isLoading: false,
+                isAction: true,
+
+            }
+        }
+        case ACTIVE_POI_FAIL: {
             return {
                 ...state,
                 messageSuccess: '',

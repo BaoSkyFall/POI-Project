@@ -63,7 +63,6 @@ export default function visitManagementReducer(state = initialState, action) {
         case UPDATE_VISIT_SUCCESS: {
             return {
                 ...state,
-                listVisit: action.listVisit,
                 isAction: true,
                 isLoading: false,
                 messageSuccess: action.messageSuccess,
@@ -88,7 +87,6 @@ export default function visitManagementReducer(state = initialState, action) {
         case ADD_VISIT_SUCCESS: {
             return {
                 ...state,
-                listVisit: action.listVisit,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isAction: true,
@@ -114,7 +112,6 @@ export default function visitManagementReducer(state = initialState, action) {
         case DELETE_VISIT_SUCCESS: {
             return {
                 ...state,
-                listVisit: action.listVisit,
                 messageSuccess: action.messageSuccess,
                 messageError: '',
                 isLoading: false,
