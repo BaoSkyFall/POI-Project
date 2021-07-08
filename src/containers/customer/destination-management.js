@@ -22,7 +22,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchAllDestinationType: (accessToken) => dispatch(fetchAllDestinationType(accessToken)),
     updateDestination: (accessToken,trip) => dispatch(updateDestination(accessToken,trip)),
     deleteDestination: (accessToken,id) => dispatch(deleteDestination(accessToken,id)),
-    addDestination: (accessToken,trip) => dispatch(addDestination(accessToken,trip)),
+    addDestination: (accessToken,des,image) => dispatch(addDestination(accessToken,des,image)),
     fetchAllProvince: (accessToken,trip) => dispatch(fetchAllProvince(accessToken,trip)),
 
 

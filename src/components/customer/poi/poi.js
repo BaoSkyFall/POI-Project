@@ -1,12 +1,15 @@
 import React from 'react';
-import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space,DatePicker } from 'antd';
+import { Table, notification, Spin, Image, Select, Rate, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space, DatePicker } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
-import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined, UploadOutlined } from '@ant-design/icons';
+import { storage } from "../../../firebase/index";
+
+const { Option } = Select;
 const layout = {
     labelCol: {
         span: 8,
@@ -32,43 +35,61 @@ class POIManagement extends React.Component {
 
         this.columns = [{
             title: 'Id',
-            dataIndex: 'destinationId',
+            dataIndex: 'poiId',
             defaultSortOrder: 'descend',
             width: '18%',
-            sorter: (a, b) => a.destinationId.localeCompare(b.destinationId),
+            sorter: (a, b) => a.poiId.localeCompare(b.poiId),
         },
         {
-            title: 'Name',
-            dataIndex: 'destinationName',
+            title: 'Image',
+            dataIndex: 'imageUrl',
             defaultSortOrder: 'descend',
             width: '18%',
-            sorter: (a, b) => a.destinationName.localeCompare(b.destinationName),
-        },
-        {
-            title: 'POI Type    ',
-            dataIndex: 'destinationType',
-            defaultSortOrder: 'descend',
-            width: '18%',
-            render: (destinationType) => (
-                <Space size="middle">
-                   {destinationType.name}
+            render: (imageUrl) => (
+                <Space className="space-column" size="middle">
+                    <Image
+                        width={200}
+                        src={imageUrl}
+                    />
+                    {/* <img className="image-column" src={imageUrl} alt=""></img> */}
                 </Space>
             )
         },
         {
-            title: 'HashTag',
-            dataIndex: 'hashTags',
+            title: 'Name',
+            dataIndex: 'name',
+            defaultSortOrder: 'descend',
             width: '18%',
-            render: hashTags => (
-                <>
-                    {hashTags.map(hashtag => {
-                        return (
-                            <Tag color="blue" key={hashtag.shortName}>
-                                {hashtag.shortName}
-                            </Tag>
-                        );
-                    })}
-                </>
+            sorter: (a, b) => a.name.localeCompare(b.name),
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            defaultSortOrder: 'descend',
+            width: '18%',
+            sorter: (a, b) => a.description.localeCompare(b.description),
+        },
+        {
+            title: 'POI Type',
+            dataIndex: 'poiType',
+            width: '18%',
+            render: poiType => (
+                <Space size="middle">
+                    {poiType.name}
+
+                </Space>
+            ),
+        },
+
+        {
+            title: 'Rating',
+            dataIndex: 'rating',
+            width: '18%',
+            render: rating => (
+                <Space size="middle">
+
+                    <Rate disabled value={rating}></Rate>
+                </Space>
             ),
         },
         {
@@ -78,16 +99,16 @@ class POIManagement extends React.Component {
             width: '15%',
             render: (record) => (
                 <Space size="middle">
-                <a onClick={() => this.onEditPOI(record)}>Edit</a>
-                {
-                    record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeletePOI(record)}>
-                        <a>Inactive</a>
-                    </Popconfirm> : null
-                }
+                    <a onClick={() => this.onEditPOI(record)}>Edit</a>
+                    {
+                        record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeletePOI(record)}>
+                            <a>Inactive</a>
+                        </Popconfirm> : null
+                    }
 
 
 
-            </Space>
+                </Space>
             )
         }];
 
@@ -98,6 +119,8 @@ class POIManagement extends React.Component {
             visibleUpdate: false,
             visibleAdd: false,
             confirmLoading: false,
+            imageView: null,
+            imageAdd: null,
         }
     }
 
@@ -116,7 +139,13 @@ class POIManagement extends React.Component {
 
     }
     onFinish = values => {
-        values.POIId = this.state.poiSelected.POIId
+        values.poiId = this.state.poiSelected.poiId
+        values.location = {
+            latitude: values.latitude,
+            longtitude: values.longtitude
+        }
+        values.imageUrl = this.state.imageView
+        values.destinationId = this.state.poiSelected.destination.destinationId
         this.handleCancelModal()
         this.props.updatePOI(this.state.accessToken, values)
     };
@@ -134,9 +163,14 @@ class POIManagement extends React.Component {
         if (this.formRef.current) {
             this.formRef.current.setFieldsValue({
                 name: data.name,
-                shortName: data.shortName,
-
+                description: data.description,
+                latitude: data.location.latitude,
+                longtitude: data.location.longtitude,
+                poiTypeId: data.poiType.poitypeId,
+                destinationId: data.destination.destinationId,
+                imageUrl: data.imageUrl
             })
+            this.setState({ imageView: data.imageUrl })
         }
 
 
@@ -153,7 +187,70 @@ class POIManagement extends React.Component {
         console.log('values:', values)
         this.props.deletePOI(this.state.accessToken, values.userId)
     }
+    handleBtnClick() {
+        /*Collecting node-element and performing click*/
+        this.inputRef.click();
 
+    }
+    handleFileChange(e) {
+        /*Selected files data can be collected here.*/
+        console.log(e.target.files);
+        this.setState({ confirmLoading: true })
+        const uploadTask = storage.ref(`poi/${this.state.poiSelected.poiId}`).put(e.target.files[0]);
+        uploadTask.on(
+            "state_changed",
+            snapshot => {
+            },
+            error => {
+                console.log(error);
+                this.setState({ confirmLoading: false })
+
+            },
+            () => {
+                storage
+                    .ref('poi')
+                    .child(this.state.poiSelected.poiId)
+                    .getDownloadURL()
+                    .then(url => {
+                        this.setState({ imageView: url,confirmLoading: false })
+                    });
+            }
+
+        );
+    }
+    handleFileAddChange(e) {
+        /*Selected files data can be collected here.*/
+        console.log(e.target.files);
+        this.setState({ imageAdd: e.target.files[0] })
+        var input = e.target;
+
+        var reader = new FileReader();
+        reader.onload = () => {
+            var dataURL = reader.result;
+            this.setState({ imageView: dataURL })
+
+        };
+        reader.readAsDataURL(input.files[0]);
+        // const uploadTask = storage.ref(`destination/${this.state.destinationSelected.destinationId}`).put(e.target.files[0]);
+        // uploadTask.on(
+        //     "state_changed",
+        //     snapshot => {
+        //     },
+        //     error => {
+        //         console.log(error);
+        //     },
+        //     () => {
+        //         storage
+        //             .ref('destination')
+        //             .child(this.state.destinationSelected.destinationId)
+        //             .getDownloadURL()
+        //             .then(url => {
+        //                 this.setState({ imageView: url })
+        //             });
+        //     }
+
+        // );
+    }
     componentDidUpdate() {
         const { isAction } = this.props
         if (isAction) {
@@ -163,12 +260,14 @@ class POIManagement extends React.Component {
     componentDidMount() {
         const { accessToken } = this.state;
         this.props.fetchAllPOI(accessToken);
+        this.props.fetchAllPOIType(this.state.accessToken)
     }
 
     render() {
-        const { isLoading, messageError, isAction, messageSuccess, listPOI } = this.props;
+        const { isLoading, messageError, isAction, messageSuccess, listPOI, listPOIType } = this.props;
         console.log('listPOI:', listPOI)
-        const { confirmLoading, visibleUpdate, visibleAdd } = this.state;
+        console.log('listPOIType:', listPOIType)
+        const { confirmLoading, visibleUpdate, visibleAdd, imageView, imageAdd } = this.state;
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
             return (<Redirect to={{
@@ -219,6 +318,24 @@ class POIManagement extends React.Component {
 
                     >
                         <Form.Item
+
+                            label="Image"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Image src={imageView} />
+                            <input style={{ display: 'none' }} className="input-file" ref={input => this.inputRef = input} onChange={(e) => { this.handleFileChange(e) }} type="file" />
+                            <Button onClick={() => {
+                                this.handleBtnClick()
+                            }} type="primary" size="'large'" icon={<UploadOutlined />}
+                                loading={confirmLoading}>
+                                Upload
+                            </Button>
+                        </Form.Item>
+                        <Form.Item
                             name="name"
                             label="Name"
                             rules={[
@@ -230,8 +347,8 @@ class POIManagement extends React.Component {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="shortName"
-                            label="Short Name"
+                            name="description"
+                            label="Description"
                             rules={[
                                 {
                                     required: true,
@@ -239,6 +356,47 @@ class POIManagement extends React.Component {
                             ]}
                         >
                             <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="latitude"
+                            label="Latitude"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="longtitude"
+                            label="Longtitude"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="poiTypeId"
+                            label="POI Type"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: '100%' }}
+                            >
+                                {listPOIType.map(item => (
+                                    <Select.Option key={item.poitypeId} value={item.poitypeId}>
+                                        {item.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
@@ -270,6 +428,23 @@ class POIManagement extends React.Component {
 
                     >
                         <Form.Item
+
+                            label="Image"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Image src={imageView} />
+                            <input style={{ display: 'none' }} className="input-file" ref={input => this.inputRef = input} onChange={(e) => { this.handleFileAddChange(e) }} type="file" />
+                            <Button onClick={() => {
+                                this.handleBtnClick()
+                            }} type="primary" size="'large'" icon={<UploadOutlined />}>
+                                Upload
+                            </Button>
+                        </Form.Item>
+                        <Form.Item
                             name="name"
                             label="Name"
                             rules={[
@@ -281,8 +456,8 @@ class POIManagement extends React.Component {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="shortName"
-                            label="Short Name"
+                            name="description"
+                            label="Description"
                             rules={[
                                 {
                                     required: true,
@@ -291,7 +466,48 @@ class POIManagement extends React.Component {
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item {...tailLayout}>
+                        <Form.Item
+                            name="latitude"
+                            label="Latitude"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="longtitude"
+                            label="Longtitude"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="poiTypeId"
+                            label="POI Type"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: '100%' }}
+                            >
+                                {listPOIType.map(item => (
+                                    <Select.Option key={item.poitypeId} value={item.poitypeId}>
+                                        {item.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                          <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
                                 Add New
                             </Button>
@@ -302,7 +518,6 @@ class POIManagement extends React.Component {
 
 
                 </Modal>
-
             </React.Fragment>
         )
 

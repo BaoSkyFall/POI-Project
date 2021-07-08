@@ -109,7 +109,7 @@ const addDestination = (accessToken, Destination) => {
         dispatch({ type: ADD_DESTINATION });
         return callApi(`api/Destination`, 'POST', Destination, { Authorization: 'Bearer ' + accessToken })
             .then(res => {
-                if (res.status === 200) {
+                if (res.status === 200 || res.status === 201) {
                     console.log('res:', res.data)
                     dispatch({
                         type: ADD_DESTINATION_SUCCESS,

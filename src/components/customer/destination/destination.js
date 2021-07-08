@@ -133,6 +133,7 @@ class DestinationManagement extends React.Component {
             visibleAdd: false,
             confirmLoading: false,
             imageView: null,
+            imageAdd: null,
         }
     }
 
@@ -151,21 +152,21 @@ class DestinationManagement extends React.Component {
     }
     onFinish = values => {
         values.destinationId = this.state.destinationSelected.destinationId
-        console.log('values:', values)
         values.location = {
             latitude: values.latitude,
             longtitude: values.longtitude
-
         }
         values.imageUrl = this.state.imageView
-        console.log('values:', values)
-
         this.handleCancelModal()
         this.props.updateDestination(this.state.accessToken, values)
     };
     onFinishAdd = values => {
         this.setState({ visibleAdd: false })
-        this.props.addDestination(this.state.accessToken, values)
+        values.location = {
+            latitude: values.latitude,
+            longtitude: values.longtitude
+        }
+        this.props.addDestination(this.state.accessToken, values, this.state.imageAdd)
 
     }
     onReset = () => {
@@ -192,7 +193,7 @@ class DestinationManagement extends React.Component {
         this.setState({ visibleAdd: true })
         if (this.formRefAdd.current) {
             this.formRefAdd.current.resetFields()
-
+            this.setState({ imageAdd: null, imageView: null })
         }
     }
     onDeleteDestination(values) {
@@ -245,7 +246,7 @@ class DestinationManagement extends React.Component {
     handleFileChange(e) {
         /*Selected files data can be collected here.*/
         console.log(e.target.files);
-        var input = e.target
+        this.setState({ confirmLoading: true })
         const uploadTask = storage.ref(`destination/${this.state.destinationSelected.destinationId}`).put(e.target.files[0]);
         uploadTask.on(
             "state_changed",
@@ -253,6 +254,8 @@ class DestinationManagement extends React.Component {
             },
             error => {
                 console.log(error);
+                this.setState({ confirmLoading: false })
+
             },
             () => {
                 storage
@@ -260,11 +263,44 @@ class DestinationManagement extends React.Component {
                     .child(this.state.destinationSelected.destinationId)
                     .getDownloadURL()
                     .then(url => {
-                        this.setState({ imageView: url })
+                        this.setState({ imageView: url, confirmLoading: false })
                     });
             }
 
         );
+    }
+    handleFileAddChange(e) {
+        /*Selected files data can be collected here.*/
+        console.log(e.target.files);
+        this.setState({ imageAdd: e.target.files[0] })
+        var input = e.target;
+
+        var reader = new FileReader();
+        reader.onload = () => {
+            var dataURL = reader.result;
+            this.setState({ imageView: dataURL })
+
+        };
+        reader.readAsDataURL(input.files[0]);
+        // const uploadTask = storage.ref(`destination/${this.state.destinationSelected.destinationId}`).put(e.target.files[0]);
+        // uploadTask.on(
+        //     "state_changed",
+        //     snapshot => {
+        //     },
+        //     error => {
+        //         console.log(error);
+        //     },
+        //     () => {
+        //         storage
+        //             .ref('destination')
+        //             .child(this.state.destinationSelected.destinationId)
+        //             .getDownloadURL()
+        //             .then(url => {
+        //                 this.setState({ imageView: url })
+        //             });
+        //     }
+
+        // );
     }
     render() {
         const { isLoading, messageError, isAction, messageSuccess, listDestination, listDestinationType, listProvince } = this.props;
@@ -331,24 +367,13 @@ class DestinationManagement extends React.Component {
                             <input style={{ display: 'none' }} className="input-file" ref={input => this.inputRef = input} onChange={(e) => { this.handleFileChange(e) }} type="file" />
                             <Button onClick={() => {
                                 this.handleBtnClick()
-                            }} type="primary" size="'large'" icon={<UploadOutlined />}>
+                            }} type="primary" size="'large'" icon={<UploadOutlined />} loading={confirmLoading}>
                                 Upload
                             </Button>
                         </Form.Item>
                         <Form.Item
                             name="destinationName"
                             label="Name"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="latitude"
-                            label="Latitude"
                             rules={[
                                 {
                                     required: true,
@@ -447,6 +472,23 @@ class DestinationManagement extends React.Component {
 
                     >
                         <Form.Item
+
+                            label="Image"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Image src={imageView} />
+                            <input style={{ display: 'none' }} className="input-file" ref={input => this.inputRef = input} onChange={(e) => { this.handleFileAddChange(e) }} type="file" />
+                            <Button onClick={() => {
+                                this.handleBtnClick()
+                            }} type="primary" size="'large'" icon={<UploadOutlined />}>
+                                Upload
+                            </Button>
+                        </Form.Item>
+                        <Form.Item
                             name="destinationName"
                             label="Name"
                             rules={[
@@ -467,6 +509,55 @@ class DestinationManagement extends React.Component {
                             ]}
                         >
                             <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="longtitude"
+                            label="Longtitude"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="provinceId"
+                            label="Province"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: '100%' }}
+                            >
+                                {listProvince.map(item => (
+                                    <Select.Option key={item.provinceId} value={item.provinceId}>
+                                        {item.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="destinationTypeId"
+                            label="Destination Type"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: '100%' }}
+                            >
+                                {listDestinationType.map(item => (
+                                    <Select.Option key={item.destinationTypeId} value={item.destinationTypeId}>
+                                        {item.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
