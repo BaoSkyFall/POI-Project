@@ -24,7 +24,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchAllPOIType: (accessToken) => dispatch(fetchAllPOIType(accessToken)),
     updatePOI: (accessToken,trip) => dispatch(updatePOI(accessToken,trip)),
     deletePOI: (accessToken,id) => dispatch(deletePOI(accessToken,id)),
-    addPOI: (accessToken,trip) => dispatch(addPOI(accessToken,trip)),
+    addPOI: (accessToken,poi,image) => dispatch(addPOI(accessToken,poi,image)),
     resetStore: () => dispatch(resetStore())
   }
 }

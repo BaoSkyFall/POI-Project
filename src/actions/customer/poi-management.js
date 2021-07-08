@@ -14,6 +14,7 @@ import {
     RESET_STORE
 } from '../../constants/customer/poi';
 import callApi from '../../ultis/callApi';
+import { storage } from "../../firebase/index";
 const fetchAllPOI = (accessToken) => {
     return (dispatch) => {
         dispatch({ type: FETCH_ALL_POI });
@@ -36,22 +37,77 @@ const fetchAllPOI = (accessToken) => {
     }
 }
 
-const addPOI = (accessToken, Destination) => {
+const addPOI = (accessToken, poi,image) => {
     return (dispatch) => {
         dispatch({ type: ADD_POI });
-        return callApi(`api/Poi`, 'POST', Destination, { Authorization: 'Bearer ' + accessToken })
+        return callApi(`api/Poi`, 'POST', poi, { Authorization: 'Bearer ' + accessToken })
             .then(res => {
-                if (res.status === 200) {
+                if (res) {
                     console.log('res:', res.data)
-                    dispatch({
-                        type: ADD_POI_SUCCESS,
-                        listPOI: res.data
-                    });
+                    poi.poiId = res.data
+                    if (image) {
+                        const uploadTask = storage.ref(`poi/${res.data}`).put(image);
+                        uploadTask.on(
+                            "state_changed",
+                            snapshot => {
+                            },
+                            error => {
+                                console.log(error);
+                                this.setState({ confirmLoading: false })
+
+                            },
+                            () => {
+                                storage
+                                    .ref('poi')
+                                    .child(res.data)
+                                    .getDownloadURL()
+                                    .then(url => {
+                                        dispatch({
+                                            type: ADD_POI_SUCCESS,
+                                            messageSuccess: "Add POI success"
+                                        });
+                                        poi.imageUrl = url
+
+                                        dispatch({ type: UPDATE_POI });
+                                        return callApi(`api/Poi`, 'PUT', poi, { Authorization: 'Bearer ' + accessToken })
+                                            .then(result => {
+
+                                                if (result.status === 200) {
+                                                    console.log('result:', result.data)
+                                                    dispatch({
+                                                        type: UPDATE_POI_SUCCESS,
+                                                        messageSuccess: 'Update Image to Firebase Success'
+                                                    });
+                                                }
+                                                else {
+                                                    dispatch({
+                                                        type: UPDATE_POI_FAIL,
+                                                        messageError: "Update Image to Firebase Fail"
+                                                    });
+                                                }
+                                            })
+                                            .catch(error => {
+                                                dispatch({
+                                                    type: UPDATE_POI_FAIL,
+                                                    messageError: error + " Update Image to Firebase Fail"
+                                                });
+                                            })
+                                    });
+                            }
+
+                        );
+                    }
+                    else {
+                        dispatch({
+                            type: ADD_POI_SUCCESS,
+                            messageSuccess: "Add Destination success"
+                        });
+                    }
                 }
                 else {
                     dispatch({
                         type: ADD_POI_FAIL,
-                        messageError: "Add POI fail"
+                        messageError: "Add Destination fail"
                     });
                 }
             })

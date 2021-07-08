@@ -7,6 +7,7 @@ import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
 import { formatTransaction } from '../../../utils/transaction';
 import { URL_SERVER } from '../../../configs/server';
 import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { values } from 'lodash';
 const layout = {
     labelCol: {
         span: 8,
@@ -108,7 +109,7 @@ class DestinationTypeManagement extends React.Component {
     onFinishAdd = values => {
         console.log('values:', values)
         this.setState({ visibleAdd: false })
-        this.props.addDestinationType(this.state.accessToken, values)
+        this.props.addDestinationType(this.state.accessToken, values,this.state)
 
     }
     onReset = () => {
@@ -131,7 +132,6 @@ class DestinationTypeManagement extends React.Component {
         this.setState({ visibleAdd: true })
         if (this.formRefAdd.current) {
             this.formRefAdd.current.resetFields()
-
         }
     }
     onDeleteDestinationType(values) {

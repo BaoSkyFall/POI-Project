@@ -82,6 +82,7 @@ const fetchAllProvince = (accessToken) => {
             .then(res => {
                 if (res.status === 200) {
                     console.log('res:', res.data)
+
                     dispatch({
                         type: FETCH_ALL_PROVINCE_SUCCESS,
                         listProvince: res.data
@@ -104,34 +105,6 @@ const mapDisplayImage = (imageRef) => {
     }).catch(function (error) {
     });
 }
-const addDestination = (accessToken, Destination) => {
-    return (dispatch) => {
-        dispatch({ type: ADD_DESTINATION });
-        return callApi(`api/Destination`, 'POST', Destination, { Authorization: 'Bearer ' + accessToken })
-            .then(res => {
-                if (res.status === 200 || res.status === 201) {
-                    console.log('res:', res.data)
-                    dispatch({
-                        type: ADD_DESTINATION_SUCCESS,
-                        listDestination: res.data
-                    });
-                }
-                else {
-                    dispatch({
-                        type: ADD_DESTINATION_FAIL,
-                        messageError: "Add Destination fail"
-                    });
-                }
-            })
-            .catch(error => {
-                dispatch({
-                    type: ADD_DESTINATION_FAIL,
-                    messageError: error + " Add Destination fail"
-                });
-            })
-    }
-}
-
 const updateDestination = (accessToken, destination) => {
     return (dispatch) => {
         dispatch({ type: UPDATE_DESTINATION });
@@ -160,6 +133,90 @@ const updateDestination = (accessToken, destination) => {
             })
     }
 }
+const addDestination = (accessToken, Destination, image) => {
+    return (dispatch) => {
+        dispatch({ type: ADD_DESTINATION });
+        return callApi(`api/Destination`, 'POST', Destination, { Authorization: 'Bearer ' + accessToken })
+            .then(res => {
+                if (res) {
+                    console.log('res:', res.data)
+                    Destination.destinationId = res.data
+                    if (image) {
+                        const uploadTask = storage.ref(`destination/${res.data}`).put(image);
+                        uploadTask.on(
+                            "state_changed",
+                            snapshot => {
+                            },
+                            error => {
+                                console.log(error);
+                                this.setState({ confirmLoading: false })
+
+                            },
+                            () => {
+                                storage
+                                    .ref('destination')
+                                    .child(res.data)
+                                    .getDownloadURL()
+                                    .then(url => {
+                                        dispatch({
+                                            type: ADD_DESTINATION_SUCCESS,
+                                            messageSuccess: "Add Destination success"
+                                        });
+                                        Destination.imageUrl = url
+
+                                        dispatch({ type: UPDATE_DESTINATION });
+                                        return callApi(`api/Destination`, 'PUT', Destination, { Authorization: 'Bearer ' + accessToken })
+                                            .then(result => {
+
+                                                if (result.status === 200) {
+                                                    console.log('result:', result.data)
+                                                    dispatch({
+                                                        type: UPDATE_DESTINATION_SUCCESS,
+                                                        messageSuccess: 'Update Image to Firebase Success'
+                                                    });
+                                                }
+                                                else {
+                                                    dispatch({
+                                                        type: UPDATE_DESTINATION_FAIL,
+                                                        messageError: "Update Image to Firebase Fail"
+                                                    });
+                                                }
+                                            })
+                                            .catch(error => {
+                                                dispatch({
+                                                    type: UPDATE_DESTINATION_FAIL,
+                                                    messageError: error + " Update Image to Firebase Fail"
+                                                });
+                                            })
+                                    });
+                            }
+
+                        );
+                    }
+                    else {
+                        dispatch({
+                            type: ADD_DESTINATION_SUCCESS,
+                            messageSuccess: "Add Destination success"
+                        });
+                    }
+                }
+                else {
+                    dispatch({
+                        type: ADD_DESTINATION_FAIL,
+                        messageError: "Add Destination fail"
+                    });
+                }
+            })
+            .catch(error => {
+                dispatch({
+                    type: ADD_DESTINATION_FAIL,
+                    messageError: error + " Add Destination fail"
+                });
+            })
+    }
+}
+
+
 
 const deleteDestination = (accessToken, id) => {
     return (dispatch) => {

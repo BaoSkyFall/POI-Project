@@ -113,11 +113,11 @@ class DestinationManagement extends React.Component {
             render: (record) => (
                 <Space size="middle">
                     <a onClick={() => this.onEditDestination(record)}>Edit</a>
-                    {
-                        record.status === 1 ? <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeleteDestination(record)}>
-                            <a>Inactive</a>
-                        </Popconfirm> : null
-                    }
+
+                    <Popconfirm title="Sure to Inactive?" onConfirm={() => this.onDeleteDestination(record)}>
+                        <a>Inactive</a>
+                    </Popconfirm>
+
 
 
 
@@ -166,6 +166,7 @@ class DestinationManagement extends React.Component {
             latitude: values.latitude,
             longtitude: values.longtitude
         }
+        debugger
         this.props.addDestination(this.state.accessToken, values, this.state.imageAdd)
 
     }
@@ -197,7 +198,7 @@ class DestinationManagement extends React.Component {
         }
     }
     onDeleteDestination(values) {
-        this.props.deleteDestination(this.state.accessToken, values.userId)
+        this.props.deleteDestination(this.state.accessToken, values.destinationId)
     }
 
     componentDidUpdate() {

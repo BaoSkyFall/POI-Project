@@ -169,7 +169,7 @@ class POIManagement extends React.Component {
             latitude: values.latitude,
             longtitude: values.longtitude
         }
-        this.props.addPOI(this.state.accessToken, values)
+        this.props.addPOI(this.state.accessToken, values,this.state.imageAdd)
 
     }
     onReset = () => {
@@ -203,7 +203,7 @@ class POIManagement extends React.Component {
     }
     onDeletePOI(values) {
         console.log('values:', values)
-        this.props.deletePOI(this.state.accessToken, values.userId)
+        this.props.deletePOI(this.state.accessToken, values.poiId)
     }
     handleBtnClick() {
         /*Collecting node-element and performing click*/
