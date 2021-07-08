@@ -35,29 +35,40 @@ class MenuLeft extends React.Component {
     render() {
         let pathname = window.location.pathname;
         pathname = pathname.substring(pathname.lastIndexOf('/') + 1);
+        console.log('pathname:', pathname)
         let defaultKey = '';
         switch (pathname) {
-            case MENUITEM.PAYMENT_ACCOUNTS:
+            case MENUITEM.DESTINATION_MANAGEMENT:
                 defaultKey = '1'
                 break;
-            case MENUITEM.INTERNAL_TRANSFER:
+            case MENUITEM.DESTINATION_TYPE:
                 defaultKey = '2'
 
                 // code block
                 break;
-            case MENUITEM.DEBT_REMINDER:
+            case MENUITEM.POI_MANAGEMENT:
                 defaultKey = '3'
 
                 break;
-            case MENUITEM.SAVING:
+            case MENUITEM.POI_TYPE:
                 defaultKey = '4'
                 break;
-            case MENUITEM.SETUP_RECIPIENT:
+            case MENUITEM.HASHTAG:
                 defaultKey = '5'
                 break;
-            case MENUITEM.TRANSACTION_HISTORY:
+            case MENUITEM.TRIP:
                 defaultKey = '6'
                 break;
+            case MENUITEM.USER:
+                defaultKey = '7'
+                break;
+            case MENUITEM.VISIT:
+                defaultKey = '8'
+                break;
+            case MENUITEM.VOTE:
+                defaultKey = '9'
+                break;
+
             default:
                 defaultKey = '1'
                 break;
@@ -70,7 +81,7 @@ class MenuLeft extends React.Component {
                 mode="inline"
                 theme="dark"
                 inlineCollapsed={this.state.collapsed}
-                defaultOpenKeys={['sub1']}
+                defaultOpenKeys={['sub1','sub2']}
             >
                 {/* <Button type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 16 }}>
                     {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}

@@ -80,7 +80,21 @@ class POIManagement extends React.Component {
                 </Space>
             ),
         },
+        {
+            title: 'Destination',
+            dataIndex: 'destination',
+            width: '18%',
+            render: destination => (
+                <Space style={{ gap: 0 }} direction='vertical' align='center' size="middle">
+                    <div>
+                        {destination.destinationName}
+                        <br></br>
+                        <Image src={destination.imageUrl}></Image>
+                    </div>
 
+                </Space>
+            ),
+        },
         {
             title: 'Rating',
             dataIndex: 'rating',
@@ -145,13 +159,16 @@ class POIManagement extends React.Component {
             longtitude: values.longtitude
         }
         values.imageUrl = this.state.imageView
-        values.destinationId = this.state.poiSelected.destination.destinationId
         this.handleCancelModal()
         this.props.updatePOI(this.state.accessToken, values)
     };
     onFinishAdd = values => {
         console.log('values:', values)
         this.setState({ visibleAdd: false })
+        values.location = {
+            latitude: values.latitude,
+            longtitude: values.longtitude
+        }
         this.props.addPOI(this.state.accessToken, values)
 
     }
@@ -180,6 +197,7 @@ class POIManagement extends React.Component {
         this.setState({ visibleAdd: true })
         if (this.formRefAdd.current) {
             this.formRefAdd.current.resetFields()
+            this.setState({ imageAdd: null, imageView: null })
 
         }
     }
@@ -212,7 +230,7 @@ class POIManagement extends React.Component {
                     .child(this.state.poiSelected.poiId)
                     .getDownloadURL()
                     .then(url => {
-                        this.setState({ imageView: url,confirmLoading: false })
+                        this.setState({ imageView: url, confirmLoading: false })
                     });
             }
 
@@ -261,13 +279,12 @@ class POIManagement extends React.Component {
         const { accessToken } = this.state;
         this.props.fetchAllPOI(accessToken);
         this.props.fetchAllPOIType(this.state.accessToken)
+        this.props.fetchAllDestination(this.state.accessToken)
     }
 
     render() {
-        const { isLoading, messageError, isAction, messageSuccess, listPOI, listPOIType } = this.props;
-        console.log('listPOI:', listPOI)
-        console.log('listPOIType:', listPOIType)
-        const { confirmLoading, visibleUpdate, visibleAdd, imageView, imageAdd } = this.state;
+        const { isLoading, messageError, isAction, messageSuccess, listPOI, listPOIType, listDestination } = this.props;
+        const { confirmLoading, visibleUpdate, visibleAdd, imageView } = this.state;
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
             return (<Redirect to={{
@@ -398,6 +415,25 @@ class POIManagement extends React.Component {
                                 ))}
                             </Select>
                         </Form.Item>
+                        <Form.Item
+                            name="destinationId"
+                            label="Destination"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: '100%' }}
+                            >
+                                {listDestination.map(item => (
+                                    <Select.Option key={item.destinationId} value={item.destinationId}>
+                                        {item.destinationName}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
                                 Update
@@ -507,7 +543,27 @@ class POIManagement extends React.Component {
                                 ))}
                             </Select>
                         </Form.Item>
-                          <Form.Item {...tailLayout}>
+                        <Form.Item
+                            name="destinationId"
+                            label="Destination"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: '100%' }}
+                            >
+                                {listDestination.map(item => (
+                                    <Select.Option key={item.destinationId} value={item.destinationId}>
+                                        {item.destinationName}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
                                 Add New
                             </Button>
