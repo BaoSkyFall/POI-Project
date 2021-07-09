@@ -164,11 +164,11 @@ class MenuLeft extends React.Component {
                         <span> Visit Management</span>
                     </Link>
                 </Menu.Item>
-                <Menu.Item key="9" icon={<CheckCircleOutlined />}>
+                {/* <Menu.Item key="9" icon={<CheckCircleOutlined />}>
                     <Link to={MENUITEM.VOTE} >
                         <span>Vote  Management</span>
                     </Link>
-                </Menu.Item>
+                </Menu.Item> */}
                 <Menu.Item key="10" icon={<LogoutOutlined />}>
                     <Link to="/" >
                         <span>Logout</span>
