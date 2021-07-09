@@ -18,16 +18,21 @@ import {
 } from '../../constants/customer/poi';
 import callApi from '../../ultis/callApi';
 import { storage } from "../../firebase/index";
-const fetchAllPOI = (accessToken) => {
+const fetchAllPOI = (accessToken,pageIndex) => {
     return (dispatch) => {
         dispatch({ type: FETCH_ALL_POI });
-        return callApi(`api/Poi`, 'GET', {}, { Authorization: 'Bearer ' + accessToken,'X-Pagination': JSON.stringify({"PageSize":999,"CurrentPageIndex":1})
-})
+        return callApi(`api/Poi?pageIndex=${pageIndex}`, 'GET', {}, {
+            Authorization: 'Bearer ' + accessToken, 'X-Pagination': JSON.stringify({ "PageSize": 999, "CurrentPageIndex": 1 })
+        })
             .then(res => {
                 if (res.status === 200) {
+                    console.log('res pagination:', res)
+                    const pagination = JSON.parse(res.headers['x-pagination']) || {}
+                    console.log('pagination:', pagination)
                     dispatch({
                         type: FETCH_ALL_POI_SUCCESS,
-                        listPOI: res.data
+                        listPOI: res.data,
+                        total:pagination.TotalCount
                     });
                 }
             })
@@ -40,7 +45,7 @@ const fetchAllPOI = (accessToken) => {
     }
 }
 
-const addPOI = (accessToken, poi,image) => {
+const addPOI = (accessToken, poi, image) => {
     return (dispatch) => {
         dispatch({ type: ADD_POI });
         return callApi(`api/Poi`, 'POST', poi, { Authorization: 'Bearer ' + accessToken })

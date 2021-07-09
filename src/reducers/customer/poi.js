@@ -19,6 +19,7 @@ import {
 
 const initialState = {
     listPOI: [],
+    total: 10,
     isAction: false,
     messageError: '',
     messageSuccess: '',
@@ -40,6 +41,7 @@ export default function poiManagementReducer(state = initialState, action) {
             return {
                 ...state,
                 listPOI: action.listPOI,
+                total:action.total,
                 messageSuccess:'',
                 messageError:'',
                 isLoading: false,

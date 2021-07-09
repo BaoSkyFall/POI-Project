@@ -145,6 +145,8 @@ class POIManagement extends React.Component {
             email: localStorage.getItem(EMAIL_KEY) || '',
             poiSelected: '',
             visibleUpdate: false,
+            current: 1,
+            pageSize: 10,
             visibleAdd: false,
             confirmLoading: false,
             imageView: null,
@@ -166,7 +168,7 @@ class POIManagement extends React.Component {
     handleCancelModal() {
 
         this.setState({ visibleUpdate: false })
-        // this.props.fetchAllPOI(this.state.accessToken);
+        // this.props.fetchAllPOI(this.state.accessToken,this.state.current);
 
     }
     onFinish = values => {
@@ -289,19 +291,25 @@ class POIManagement extends React.Component {
     componentDidUpdate() {
         const { isAction } = this.props
         if (isAction) {
-            this.props.fetchAllPOI(this.state.accessToken)
+            this.props.fetchAllPOI(this.state.accessToken, this.state.current)
         }
     }
     componentDidMount() {
         const { accessToken } = this.state;
-        this.props.fetchAllPOI(accessToken);
+        this.props.fetchAllPOI(accessToken, this.state.current);
         this.props.fetchAllPOIType(this.state.accessToken)
         this.props.fetchAllDestination(this.state.accessToken)
     }
-
+    handleTableChange = (pagination, filters, sorter) => {
+        console.log('pagination:', pagination)
+        const { accessToken } = this.state;
+        this.setState({current:pagination.current})
+        this.props.fetchAllPOI(accessToken, pagination.current);
+    };
     render() {
-        const { isLoading, messageError, isAction, messageSuccess, listPOI, listPOIType, listDestination } = this.props;
-        const { confirmLoading, visibleUpdate, visibleAdd, imageView } = this.state;
+        const { isLoading, messageError, isAction, messageSuccess, listPOI, listPOIType, listDestination, total } = this.props;
+        const { confirmLoading, visibleUpdate, visibleAdd, imageView, current, pageSize } = this.state;
+        console.log('total:', total)
         if (messageError === 'AccessToken is not valid') {
             this.props.resetStore();
             return (<Redirect to={{
@@ -329,8 +337,12 @@ class POIManagement extends React.Component {
                 <Table
                     columns={this.columns}
                     dataSource={listPOI}
-                    onChange={this.handleChange}
-                    pagination={{ pageSize: 10 }}
+                    onChange={this.handleTableChange}
+                    pagination={{
+                        current,
+                        pageSize,
+                        total,
+                    }}
                     scroll={{ y: '60vh' }}
                     bordered />
 

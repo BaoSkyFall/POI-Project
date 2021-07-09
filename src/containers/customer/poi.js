@@ -12,6 +12,7 @@ const mapStateToProps = (state) => {
     listPOIType: state.poiTypeManagementReducer.listPOIType,
     listDestination: state.destinationManagementReducer.listDestination,
     isAction: state.poiManagementReducer.isAction,
+    total:state.poiManagementReducer.total,
     messageError: state.poiManagementReducer.messageError,
     messageSuccess: state.poiManagementReducer.messageSuccess,
   }
@@ -19,7 +20,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchAllPOI: (accessToken) => dispatch(fetchAllPOI(accessToken)),
+    fetchAllPOI: (accessToken,pageIndex) => dispatch(fetchAllPOI(accessToken,pageIndex)),
     fetchAllDestination: (accessToken) => dispatch(fetchAllDestination(accessToken)),
     fetchAllPOIType: (accessToken) => dispatch(fetchAllPOIType(accessToken)),
     updatePOI: (accessToken,trip) => dispatch(updatePOI(accessToken,trip)),
