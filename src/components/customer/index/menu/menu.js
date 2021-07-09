@@ -126,7 +126,7 @@ class MenuLeft extends React.Component {
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="2">
-                        <Link to={MENUITEM.DESTINATION_TYPE} >
+                        <Link to={MENUITEM.DESTINATION_TYPE} title="Destination Type">
                             <span>Destination Type Management</span>
                         </Link>
                     </Menu.Item>
@@ -138,28 +138,28 @@ class MenuLeft extends React.Component {
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="4">
-                        <Link to={MENUITEM.POI_TYPE} >
+                        <Link to={MENUITEM.POI_TYPE} title="POI Type">
                             <span>POI Type Management</span>
                         </Link>
 
                     </Menu.Item>
                 </SubMenu>
-                <Menu.Item key="5" icon={<TagOutlined />}>
+                <Menu.Item key="5" icon={<TagOutlined />} title="Hashtag">
                     <Link to={MENUITEM.HASHTAG} >
                         <span>Hashtag</span>
                     </Link>
                 </Menu.Item>
-                <Menu.Item key="6" icon={<FlagOutlined />}>
+                <Menu.Item key="6" icon={<FlagOutlined />} title="Trip Management">
                     <Link to={MENUITEM.TRIP} >
                         <span>Trip Management</span>
                     </Link>
                 </Menu.Item>
-                <Menu.Item key="7" icon={<UserOutlined />}>
+                <Menu.Item key="7" icon={<UserOutlined />} title="User Management">
                     <Link to={MENUITEM.USER} >
                         <span>User Management</span>
                     </Link>
                 </Menu.Item>
-                <Menu.Item key="8" icon={<EyeOutlined />}>
+                <Menu.Item key="8" icon={<EyeOutlined />} title="Visit Management">
                     <Link to={MENUITEM.VISIT} >
                         <span> Visit Management</span>
                     </Link>
