@@ -342,6 +342,7 @@ class POIManagement extends React.Component {
                         current,
                         pageSize,
                         total,
+                        showSizeChanger:false,
                     }}
                     scroll={{ y: '60vh' }}
                     bordered />
