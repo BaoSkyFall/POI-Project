@@ -1,0 +1,94 @@
+.contentPage .form-signin {
+    max-width: 300px;
+    margin: 0 auto;
+    padding-top: 1%;
+}
+
+
+.contentPage .form-signin-button {
+    width: 10%;
+    margin-left: 50%;
+    padding-left: -50%;
+    left: -5%;
+}
+
+.contentPage .ant-row input {
+    width: 50%;
+}
+.contentPage .ant-input-number {
+    width: 50%;
+}
+
+.contentPage input.ant-input.ant-input-lg {
+    width: 75%;
+}
+
+.contentPage form.ant-form.ant-form-horizontal.form-signin {
+    max-width: 100%;
+}
+
+.contentPage .ant-col-12.date {
+    display: inline-block;
+    padding-left: 25%;
+}
+
+.contentPage .ant-col-12.sex {
+    display: inline-block;
+    padding-right: 25%;
+}
+
+.contentPage input#date {
+    width: 60%;
+}
+
+
+
+.contentPage input#accountNumber {
+    width: 34%;
+}
+
+
+
+.contentPage input#sex {
+    width: 35%;
+}
+
+.contentPage .ant-input-number.inputnumber {
+    width: 34%;
+}
+
+.contentPage .errorAlert{
+    margin-top: 1%;
+}
+
+.contentPage .showAlert{
+    height: 50px;
+}
+
+.contentPage .progress{
+    height: 50px;
+}
+
+.contentPage .ant-spin.ant-spin-spinning {
+    padding-top: 1%;
+    display: inherit;
+}
+
+.contentPage .successProgress {
+    margin-top: 10px;
+    left: 50%;
+    position: relative;
+    margin-left: -15px;
+}
+
+.contentPage .ant-row.progress.failed 
+{text-align: center;font-size: 1.2rem;color: darkred;padding-top: 10px;}
+
+.contentPage button.ant-btn.ant-input-search-button.ant-btn-primary.ant-btn-lg {
+    width: 105%;
+}
+
+.contentPage .ant-message {
+    margin-left: 7%;
+}
+

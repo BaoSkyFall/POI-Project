@@ -1,0 +1,9 @@
+.col-left{
+    height: auto;
+    float: left;
+    /* position: fixed; */
+}
+
+.col-right{
+    float: right;
+}

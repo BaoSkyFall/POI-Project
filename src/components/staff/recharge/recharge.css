@@ -1,0 +1,11 @@
+.contentPage .submitRecharge input#accountNumber {
+    width: 50%;
+}
+
+.contentPage .submitRecharge button.ant-btn.buttonRegister.ant-btn-primary {
+    left: 45%;
+}
+
+.contentPage .submitRecharge .spn{
+    margin-left: -2%;
+}
