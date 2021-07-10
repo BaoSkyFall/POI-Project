@@ -146,7 +146,7 @@ class POIManagement extends React.Component {
             poiSelected: '',
             visibleUpdate: false,
             current: 1,
-            pageSize: 10,
+            pageSize: 5,
             visibleAdd: false,
             confirmLoading: false,
             imageView: null,
