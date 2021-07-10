@@ -13,6 +13,7 @@ import DestinationManagement from '../../../../containers/customer/destination-m
 import DestinationTypeManagement from '../../../../containers/customer/destination-type-management';
 import POIManagement from '../../../../containers/customer/poi';
 import POITypeManagement from '../../../../containers/customer/poi-type';
+import BlogManagement from '../../../../containers/customer/blog';
 
 
 
@@ -139,7 +140,14 @@ export default class Content extends Component {
                     </React.Fragment>
                 );
             }
-            
+            case MENUITEM.BLOG: {
+                return content_layout = (
+                    <React.Fragment>
+                        <h2>Blog Management</h2>
+                        <BlogManagement />
+                    </React.Fragment>
+                );
+            }
             default: {
                 content_layout = (
                     <React.Fragment>

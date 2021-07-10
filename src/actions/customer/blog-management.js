@@ -1,54 +1,56 @@
 import {
-    FETCH_ALL_POI,
-    FETCH_ALL_POI_SUCCESS,
-    FETCH_ALL_POI_FAIL,
-    UPDATE_POI,
-    UPDATE_POI_SUCCESS,
-    UPDATE_POI_FAIL,
-    ADD_POI,
-    ADD_POI_SUCCESS,
-    ADD_POI_FAIL,
-    DELETE_POI,
-    DELETE_POI_SUCCESS,
-    DELETE_POI_FAIL,
-    ACTIVE_POI,
-    ACTIVE_POI_SUCCESS,
-    ACTIVE_POI_FAIL,
+    FETCH_ALL_BLOG,
+    FETCH_ALL_BLOG_SUCCESS,
+    FETCH_ALL_BLOG_FAIL,
+    UPDATE_BLOG,
+    UPDATE_BLOG_SUCCESS,
+    UPDATE_BLOG_FAIL,
+    ADD_BLOG,
+    ADD_BLOG_SUCCESS,
+    ADD_BLOG_FAIL,
+    DELETE_BLOG,
+    DELETE_BLOG_SUCCESS,
+    DELETE_BLOG_FAIL,
+    ACTIVE_BLOG,
+    ACTIVE_BLOG_SUCCESS,
+    ACTIVE_BLOG_FAIL,
     RESET_STORE
-} from '../../constants/customer/poi';
+} from '../../constants/customer/blog';
 import callApi from '../../ultis/callApi';
 import { storage } from "../../firebase/index";
-const fetchAllPOI = (accessToken,pageIndex) => {
+const fetchAllBlog = (accessToken,pageIndex) => {
     return (dispatch) => {
-        dispatch({ type: FETCH_ALL_POI });
-        return callApi(`api/Poi?pageIndex=${pageIndex}`, 'GET', {}, {
+        dispatch({ type: FETCH_ALL_BLOG });
+        return callApi(`api/Blog?pageIndex=${pageIndex}`, 'GET', {}, {
             Authorization: 'Bearer ' + accessToken, 'X-Pagination': JSON.stringify({ "PageSize": 999, "CurrentPageIndex": 1 })
         })
             .then(res => {
                 if (res.status === 200) {
-                    console.log('res pagination:', res)
-                    const pagination = JSON.parse(res.headers['x-pagination']) || {}
-                    console.log('pagination:', pagination)
+                    res.data.forEach(element => {
+                        element.content = JSON.parse(element.content)
+                        element.description = element.content.description
+                        element.imageUrls = element.content.imageUrls|| []
+
+                    });
                     dispatch({
-                        type: FETCH_ALL_POI_SUCCESS,
-                        listPOI: res.data,
-                        total:pagination.TotalCount
+                        type: FETCH_ALL_BLOG_SUCCESS,
+                        listBlog: res.data,
                     });
                 }
             })
             .catch(error => {
                 dispatch({
-                    type: FETCH_ALL_POI_FAIL,
+                    type: FETCH_ALL_BLOG_FAIL,
                     messageError: "Server's error"
                 });
             })
     }
 }
 
-const addPOI = (accessToken, poi, image) => {
+const addBlog = (accessToken, poi, image) => {
     return (dispatch) => {
-        dispatch({ type: ADD_POI });
-        return callApi(`api/Poi`, 'POST', poi, { Authorization: 'Bearer ' + accessToken })
+        dispatch({ type: ADD_BLOG });
+        return callApi(`api/Blog`, 'POST', poi, { Authorization: 'Bearer ' + accessToken })
             .then(res => {
                 if (res) {
                     console.log('res:', res.data)
@@ -71,32 +73,32 @@ const addPOI = (accessToken, poi, image) => {
                                     .getDownloadURL()
                                     .then(url => {
                                         dispatch({
-                                            type: ADD_POI_SUCCESS,
-                                            messageSuccess: "Add POI success"
+                                            type: ADD_BLOG_SUCCESS,
+                                            messageSuccess: "Add Blog success"
                                         });
                                         poi.imageUrl = url
 
-                                        dispatch({ type: UPDATE_POI });
-                                        return callApi(`api/Poi`, 'PUT', poi, { Authorization: 'Bearer ' + accessToken })
+                                        dispatch({ type: UPDATE_BLOG });
+                                        return callApi(`api/Blog`, 'PUT', poi, { Authorization: 'Bearer ' + accessToken })
                                             .then(result => {
 
                                                 if (result.status === 200) {
                                                     console.log('result:', result.data)
                                                     dispatch({
-                                                        type: UPDATE_POI_SUCCESS,
+                                                        type: UPDATE_BLOG_SUCCESS,
                                                         messageSuccess: 'Update Image to Firebase Success'
                                                     });
                                                 }
                                                 else {
                                                     dispatch({
-                                                        type: UPDATE_POI_FAIL,
+                                                        type: UPDATE_BLOG_FAIL,
                                                         messageError: "Update Image to Firebase Fail"
                                                     });
                                                 }
                                             })
                                             .catch(error => {
                                                 dispatch({
-                                                    type: UPDATE_POI_FAIL,
+                                                    type: UPDATE_BLOG_FAIL,
                                                     messageError: error + " Update Image to Firebase Fail"
                                                 });
                                             })
@@ -107,110 +109,110 @@ const addPOI = (accessToken, poi, image) => {
                     }
                     else {
                         dispatch({
-                            type: ADD_POI_SUCCESS,
+                            type: ADD_BLOG_SUCCESS,
                             messageSuccess: "Add Destination success"
                         });
                     }
                 }
                 else {
                     dispatch({
-                        type: ADD_POI_FAIL,
+                        type: ADD_BLOG_FAIL,
                         messageError: "Add Destination fail"
                     });
                 }
             })
             .catch(error => {
                 dispatch({
-                    type: ADD_POI_FAIL,
-                    messageError: error + " Add POI fail"
+                    type: ADD_BLOG_FAIL,
+                    messageError: error + " Add Blog fail"
                 });
             })
     }
 }
 
-const updatePOI = (accessToken, destination) => {
+const updateBlog = (accessToken, destination) => {
     return (dispatch) => {
-        dispatch({ type: UPDATE_POI });
-        return callApi(`api/Poi`, 'PUT', destination, { Authorization: 'Bearer ' + accessToken })
+        dispatch({ type: UPDATE_BLOG });
+        return callApi(`api/Blog`, 'PUT', destination, { Authorization: 'Bearer ' + accessToken })
             .then(res => {
 
                 if (res.status === 200) {
                     console.log('res:', res.data)
                     dispatch({
-                        type: UPDATE_POI_SUCCESS,
-                        listPOI: res.data,
-                        messageSuccess: 'Update POI Success'
+                        type: UPDATE_BLOG_SUCCESS,
+                        listBlog: res.data,
+                        messageSuccess: 'Update Blog Success'
                     });
                 }
                 else {
                     dispatch({
-                        type: UPDATE_POI_FAIL,
-                        messageError: "Update POI Fail"
+                        type: UPDATE_BLOG_FAIL,
+                        messageError: "Update Blog Fail"
                     });
                 }
             })
             .catch(error => {
                 dispatch({
-                    type: UPDATE_POI_FAIL,
-                    messageError: error + " Update POI Fail"
+                    type: UPDATE_BLOG_FAIL,
+                    messageError: error + " Update Blog Fail"
                 });
             })
     }
 }
-const activePOI = (accessToken, id) => {
+const activeBlog = (accessToken, id) => {
     return (dispatch) => {
-        dispatch({ type: ACTIVE_POI });
-        return callApi(`api/Poi/approve/${id}`, 'PUT', {id}, { Authorization: 'Bearer ' + accessToken })
+        dispatch({ type: ACTIVE_BLOG });
+        return callApi(`api/Blog/accept/${id}`, 'POST', {id}, { Authorization: 'Bearer ' + accessToken })
             .then(res => {
                 if (res.status === 200) {
                     console.log('res:', res.data)
                     dispatch({
-                        type: ACTIVE_POI_SUCCESS,
-                        listPOIType: res.data,
-                        messageSuccess: 'Inactive POI Type Success'
+                        type: ACTIVE_BLOG_SUCCESS,
+                        listBlogType: res.data,
+                        messageSuccess: 'Inactive Blog Type Success'
 
                     });
                 }
                 else {
                     dispatch({
-                        type: ACTIVE_POI_FAIL,
-                        messageError: "Inactive POI Type Fail"
+                        type: ACTIVE_BLOG_FAIL,
+                        messageError: "Inactive Blog Type Fail"
                     });
                 }
             })
             .catch(error => {
                 dispatch({
-                    type: ACTIVE_POI_FAIL,
-                    messageError: error + " Inactive POI Type Fail"
+                    type: ACTIVE_BLOG_FAIL,
+                    messageError: error + " Inactive Blog Type Fail"
                 });
             })
     }
 }
-const deletePOI = (accessToken, id) => {
+const deleteBlog = (accessToken, id) => {
     return (dispatch) => {
-        dispatch({ type: DELETE_POI });
-        return callApi(`api/Poi/${id}`, 'DELETE', {}, { Authorization: 'Bearer ' + accessToken })
+        dispatch({ type: DELETE_BLOG });
+        return callApi(`api/Blog/${id}`, 'DELETE', {}, { Authorization: 'Bearer ' + accessToken })
             .then(res => {
                 if (res.status === 200) {
                     console.log('res:', res.data)
                     dispatch({
-                        type: DELETE_POI_SUCCESS,
-                        listPOI: res.data,
-                        messageSuccess: 'Inactive POI Success'
+                        type: DELETE_BLOG_SUCCESS,
+                        listBlog: res.data,
+                        messageSuccess: 'Inactive Blog Success'
 
                     });
                 }
                 else {
                     dispatch({
-                        type: DELETE_POI_FAIL,
-                        messageError: "Inactive POI Fail"
+                        type: DELETE_BLOG_FAIL,
+                        messageError: "Inactive Blog Fail"
                     });
                 }
             })
             .catch(error => {
                 dispatch({
-                    type: DELETE_POI_FAIL,
-                    messageError: error + " Inactive POI Fail"
+                    type: DELETE_BLOG_FAIL,
+                    messageError: error + " Inactive Blog Fail"
                 });
             })
     }
@@ -226,10 +228,10 @@ const resetStore = () => {
 }
 
 export {
-    fetchAllPOI,
-    updatePOI,
-    deletePOI,
-    activePOI,
-    addPOI,
+    fetchAllBlog,
+    updateBlog,
+    deleteBlog,
+    activeBlog,
+    addBlog,
     resetStore
 }

@@ -6,7 +6,7 @@ import {
     AppstoreOutlined,
     ControlOutlined,
     TagOutlined,
-    CheckCircleOutlined,
+    ContainerOutlined,
     FlagOutlined,
     UserOutlined,
     EyeOutlined
@@ -68,7 +68,9 @@ class MenuLeft extends React.Component {
             case MENUITEM.VOTE:
                 defaultKey = '9'
                 break;
-
+            case MENUITEM.BLOG:
+                defaultKey = '10'
+                break;
             default:
                 defaultKey = '1'
                 break;
@@ -81,7 +83,7 @@ class MenuLeft extends React.Component {
                 mode="inline"
                 theme="dark"
                 inlineCollapsed={this.state.collapsed}
-                defaultOpenKeys={['sub1','sub2']}
+                defaultOpenKeys={['sub1', 'sub2']}
             >
                 {/* <Button type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 16 }}>
                     {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}
@@ -164,12 +166,19 @@ class MenuLeft extends React.Component {
                         <span> Visit Management</span>
                     </Link>
                 </Menu.Item>
+
                 {/* <Menu.Item key="9" icon={<CheckCircleOutlined />}>
                     <Link to={MENUITEM.VOTE} >
                         <span>Vote  Management</span>
                     </Link>
+                    
                 </Menu.Item> */}
-                <Menu.Item key="10" icon={<LogoutOutlined />}>
+                <Menu.Item key="10" icon={<ContainerOutlined />} title="Blog">
+                    <Link to={MENUITEM.BLOG} >
+                        <span>Blog</span>
+                    </Link>
+                </Menu.Item>
+                <Menu.Item key="11" icon={<LogoutOutlined />}>
                     <Link to="/" >
                         <span>Logout</span>
                     </Link>

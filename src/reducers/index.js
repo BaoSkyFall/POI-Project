@@ -13,7 +13,7 @@ import destinationManagementReducer from "./customer/destination-management";
 import destinationTypeManagementReducer from "./customer/destination-type-management";
 import poiManagementReducer from "./customer/poi";
 import poiTypeManagementReducer from "./customer/poi-type";
-
+import blogManagementReducer from "./customer/blog";
 
 import authReducer from "./auth";
 import forgetPasswordReducer from "./forget-password";
@@ -45,5 +45,5 @@ export default combineReducers({
   poiManagementReducer,
   poiTypeManagementReducer,
 
-
+  blogManagementReducer
 });

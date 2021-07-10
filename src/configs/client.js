@@ -21,6 +21,7 @@ export const MENUITEM = {
     USER: 'user',
     VISIT: 'visit',
     VOTE: 'vote',
+    BLOG:'blog',
 };
 
 export const OTP_EMAIL = 'otp-email';
