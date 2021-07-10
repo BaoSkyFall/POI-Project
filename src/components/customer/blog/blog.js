@@ -325,6 +325,7 @@ class BlogManagement extends React.Component {
                     onOk={
                         this.handleOk
                     }
+                    width={800}
                     footer={[
                         <Button key="back" onClick={() => { this.handleCancelModal() }}>
                             Cancel
@@ -336,7 +337,7 @@ class BlogManagement extends React.Component {
                     <p>{blogSelected.description}</p>
                     {blogSelected.imageUrls && blogSelected.imageUrls.map(element => {
                         return (
-                            <Image src={element}></Image>
+                            <Image  src={element}></Image>
                         )
                     })}
 
