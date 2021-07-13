@@ -101,7 +101,7 @@ class SignInForm extends React.Component {
         <Form
           initialValues={{
             email: "admin@gmail.com",
-            password: "admin",
+            password: "12345678",
             something: "1234",
           }}
           onFinish={this.onFinish}

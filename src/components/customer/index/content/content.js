@@ -1,10 +1,5 @@
 import React, { Component } from 'react'
 
-import PaymentAccounts from '../../../../containers/customer/payment-accounts';
-import InternalTransfer from '../../../../containers/customer/internal-tranfer';
-import SetupRecipient from '../../../../containers/customer/setup-recipient';
-import TransactionHistory from '../../../../containers/customer/transaction-history';
-import DebtReminder from '../../../../containers/customer/debt-reminder';
 import UsersManagement from '../../../../containers/customer/users-management';
 import VisitManagement from '../../../../containers/customer/visit-management';
 import TripManagement from '../../../../containers/customer/trip-management';
@@ -29,53 +24,7 @@ export default class Content extends Component {
         let content_layout;
 
         switch (this.props.content_type) {
-            case MENUITEM.INTERNAL_TRANSFER: {
-                return content_layout = (
-                    <React.Fragment>
-                        <h2>Internal Transfer</h2>
-                        <InternalTransfer />
-                    </React.Fragment>
-                );
-            }
-            case MENUITEM.DEBT_REMINDER: {
-                return content_layout = (
-                    <React.Fragment>
-                        <h2>Debt Reminder</h2>
-                        <DebtReminder />
-                    </React.Fragment>
-                );
-            }
-            case MENUITEM.SETUP_RECIPIENT: {
-                return content_layout = (
-                    <React.Fragment>
-                        <h2>Setup Recipient</h2>
-                        <SetupRecipient />
-                    </React.Fragment>
-                );
-            }
-            case MENUITEM.TRANSACTION_HISTORY: {
-                return content_layout = (
-                    <React.Fragment>
-                        <h2>Transaction History</h2>
-                        <TransactionHistory />
-                    </React.Fragment>
-                );
-            }
-            case MENUITEM.CLOSE_WALLET: {
-                return content_layout = (
-                    <React.Fragment>
-                        <h2>Close Wallet</h2>
-                        {/* <CloseWallet /> */}
-                    </React.Fragment>
-                );
-            }
-            case OTP_EMAIL: {
-                return content_layout = (
-                    <React.Fragment>
-                        {/* <OTPEmail /> */}
-                    </React.Fragment>
-                )
-            }
+
             case MENUITEM.USER: {
                 return content_layout = (
                     <React.Fragment>
@@ -151,8 +100,8 @@ export default class Content extends Component {
             default: {
                 content_layout = (
                     <React.Fragment>
-                        <h2>User's Payment Wallet</h2>
-                        <PaymentAccounts />
+                        <h2>Destination Management</h2>
+                        <DestinationManagement />
                     </React.Fragment>
                 );
             }

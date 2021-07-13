@@ -1,10 +1,6 @@
 import { combineReducers } from "redux";
 
-import paymentAccountsReducer from "./customer/payment-accounts";
-import setupRecipientReducer from "./customer/setup-recipient";
-import internalTransferReducer from "./customer/internal-tranfer";
-import transactionHistoryReducer from "./customer/transaction-history";
-import debtReminderReducer from "./customer/debt-reminder";
+
 import userManagementReducer from "./customer/users-management";
 import visitManagementReducer from "./customer/visit-management";
 import tripManagementReducer from "./customer/trip-management";
@@ -26,11 +22,6 @@ export default combineReducers({
   authReducer,
   forgetPasswordReducer,
   // LoginReducer,
-  setupRecipientReducer,
-  paymentAccountsReducer,
-  internalTransferReducer,
-  transactionHistoryReducer,
-  debtReminderReducer,
   paymentAccount,
   accountUser,
   rechargeReducer,
