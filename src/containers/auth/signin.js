@@ -4,7 +4,6 @@ import SignIn from '../../components/auth/signin';
 import { doSignIn, resetStatus, verifyAccessToken } from '../../actions/auth';
 import { loadReCaptcha } from 'react-recaptcha-google';
 
-import { ACCESS_TOKEN_KEY } from '../../configs/client';
 
 class SignInContainer extends Component {
   componentDidMount() {

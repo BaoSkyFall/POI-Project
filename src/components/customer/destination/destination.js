@@ -1,16 +1,13 @@
 import React from 'react';
-import { Table, notification, Spin, Select, Image, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space, DatePicker } from 'antd';
+import { Table, notification, Spin, Select, Image, Popconfirm, Button, Modal, Form, Input, Tag, Space } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
-import { formatTransaction } from '../../../utils/transaction';
-import { URL_SERVER } from '../../../configs/server';
 import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined, UploadOutlined } from '@ant-design/icons';
 import { storage } from "../../../firebase/index";
 
 import * as _ from 'lodash'
-const { Option } = Select;
 
 const layout = {
     labelCol: {

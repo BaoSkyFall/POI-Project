@@ -4,7 +4,6 @@ import {
   DO_SIGNUP_FAIL,
   DO_SIGNIN,
   DO_SIGNIN_SUCCESS,
-  DO_SIGNIN_FAIL,
   RESET_STATUS,
   VERIFY_ACCESSTOKEN_SUCCESS,
   VERIFY_ACCESSTOKEN_FAIL,
@@ -18,12 +17,10 @@ import {
 import { URL_SERVER } from "../configs/server";
 import {
   ACCESS_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
+  
   EMAIL_KEY,
 } from "../configs/client";
-import jwt from "jwt-decode";
 import Swal from "sweetalert2";
-const firebase = require("firebase");
 
 //#region  auth
 const doSignUp = (infoUser) => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import POIManagement from '../../components/customer/poi/poi';
 import { fetchAllPOI,updatePOI, deletePOI,addPOI,resetStore,activePOI} from '../../actions/customer/poi-management';

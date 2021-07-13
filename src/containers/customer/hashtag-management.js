@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import HashTagManagement from '../../components/customer/hashtag/hashtag';
 import { fetchAllHashTag,updateHashTag, deleteHashTag,addHashTag,resetStore } from '../../actions/customer/hashtag-management';

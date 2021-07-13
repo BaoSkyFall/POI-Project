@@ -1,18 +1,13 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import "./content-register.css";
 
 import {
-    Form, Input, Button, Spin, notification, Row, DatePicker, Radio, message, Select, Card
+    Form, Input, Button, Spin, notification, Row, DatePicker, message, Card
 } from 'antd';
-import { CheckCircleOutlined,CloseOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
-import { URL_SERVER } from '../../../configs/server';
-import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
-const Option = Select.Option;
-const { TextArea } = Input;
+import { ACCESS_TOKEN_KEY, } from '../../../configs/client';
 const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
 message.config({
     left: 100,
 });
@@ -60,10 +55,10 @@ class FormRegister extends React.Component {
         } else if (isFailed) {
             notification.open({
                 message: `Create Customer Fail `,
-                icon: <CloseOutlined  style={{ color: 'red' }} />,
+                icon: <CloseOutlined style={{ color: 'red' }} />,
                 description: 'Please check your input is valid'
             })
-                this.props.resetStatus();
+            this.props.resetStatus();
         } else if (isLoading) {
             return (
                 <Row className="progress">
@@ -251,7 +246,7 @@ class FormRegister extends React.Component {
                                 type="primary" htmlType="submit"
                             >
                                 Register
-                        </Button>
+                            </Button>
                         </FormItem>
                     </Row>
                 </Form>

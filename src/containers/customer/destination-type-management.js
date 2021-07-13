@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import DestinationTypeManagement from '../../components/customer/destination-type/destination-type';
 import { fetchAllDestinationType,updateDestinationType, deleteDestinationType,addDestinationType,resetStore } from '../../actions/customer/destination-type-management';

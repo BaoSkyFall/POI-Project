@@ -33,11 +33,9 @@ const paymentAccount = (state = initialState, action) => {
                 email: action.user.email,
                 username: action.user.username,
                 name: action.user.name,
-                email: action.user.email,
                 phone: action.user.phone,
                 idenityNumber: action.user.idenityNumber,
                 dob: action.user.dob,
-                walletNumber: action.user.walletNumber,
                 balance: action.user.balance,
                 
 
@@ -53,11 +51,9 @@ const paymentAccount = (state = initialState, action) => {
                 email: '',
                 username: '',
                 name: '',
-                email: '',
                 phone: '',
                 idenityNumber: '',
                 dob: '',
-                walletNumber: '',
                 balance: '',
             };
         case Types.SEARCH_USERNAME_LOADING:

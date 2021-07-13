@@ -1,13 +1,10 @@
 import React from 'react';
-import { Table, notification, Spin, Card, Row, InputNumber, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space,DatePicker } from 'antd';
+import { Table, notification, Spin,Popconfirm, Button, Modal, Form, Input, Tag, Space } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
-import { formatTransaction } from '../../../utils/transaction';
-import { URL_SERVER } from '../../../configs/server';
 import { WarningOutlined, CheckCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
-import { values } from 'lodash';
 const layout = {
     labelCol: {
         span: 8,
@@ -22,7 +19,6 @@ const tailLayout = {
         span: 16,
     },
 };
-const { RangePicker } = DatePicker;
 
 class DestinationTypeManagement extends React.Component {
     formRef = React.createRef();

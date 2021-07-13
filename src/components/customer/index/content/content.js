@@ -16,7 +16,7 @@ import BlogManagement from '../../../../containers/customer/blog';
 
 // import OTPEmail from '../../../../containers/customer/otp-email';
 
-import { MENUITEM, OTP_EMAIL } from '../../../../configs/client';
+import { MENUITEM } from '../../../../configs/client';
 import './content.css'
 
 export default class Content extends Component {

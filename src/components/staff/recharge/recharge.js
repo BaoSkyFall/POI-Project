@@ -1,20 +1,13 @@
 import React, { Component } from 'react'
 import "antd/dist/antd.css";
 import './recharge.css'
-import { Card, Col, Row, Button, Form, notification, Input, InputNumber, message, Spin } from 'antd';
-import { CloseOutlined } from '@ant-design/icons'
-import { URL_SERVER } from '../../../configs/server';
-import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
+import { Card, Col, Row, Button, Form, Input, InputNumber, message, Spin } from 'antd';
 const FormItem = Form.Item;
 const Search = Input.Search;
 
 class Recharge extends Component {
     formRef = React.createRef();
 
-    constructor(props) {
-        super(props)
-
-    }
     componentWillMount() {
         console.log('componentWillMount:')
 
@@ -22,7 +15,6 @@ class Recharge extends Component {
 
     }
     componentDidMount() {
-        const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY) || '';
         // fetch(`${URL_SERVER}/user/me`, {
         //     headers: {
         //         x_accesstoken: accessToken
@@ -92,7 +84,7 @@ class Recharge extends Component {
         this.props.updateBalance(data, accessToken)
     }
     showAlertSearching = () => {
-        var { isSearchIdSuccess, isSearchIdFail, walletNumber, name } = this.props.recharge;
+        var { isSearchIdSuccess, isSearchIdFail, walletNumber } = this.props.recharge;
         if (walletNumber) {
             if (isSearchIdSuccess) {
                 // message.success(`Find info success with name: ${name}`, 3);

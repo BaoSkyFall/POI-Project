@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import POITypeManagement from '../../components/customer/poi-type/poi-type';
 import { fetchAllPOIType,updatePOIType, deletePOIType,addPOIType,resetStore } from '../../actions/customer/poi-type-management';

@@ -1,30 +1,12 @@
 import React from 'react';
-import { Table, notification, Spin, Image, Select, Rate, Col, Popconfirm, Button, Modal, Form, Input, Tag, Space, DatePicker } from 'antd';
+import { Table, notification, Spin, Image, Popconfirm, Button, Modal, Tag, Space } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import './style.css';
 import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
-import { formatTransaction } from '../../../utils/transaction';
-import { URL_SERVER } from '../../../configs/server';
-import { WarningOutlined, CheckCircleOutlined, EyeOutlined, UploadOutlined } from '@ant-design/icons';
+import { WarningOutlined, CheckCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { storage } from "../../../firebase/index";
 
-const { Option } = Select;
-const layout = {
-    labelCol: {
-        span: 8,
-    },
-    wrapperCol: {
-        span: 16,
-    },
-};
-const tailLayout = {
-    wrapperCol: {
-        offset: 8,
-        span: 16,
-    },
-};
-const { RangePicker } = DatePicker;
 
 class BlogManagement extends React.Component {
     formRef = React.createRef();

@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import './content-payment.css';
 
 import {
     Form, Input, Table, Col, Row, message, Spin, InputNumber
 } from 'antd';
-import { FormInstance } from 'antd/lib/form';
 
 import "antd/dist/antd.css";
-import { ACCESS_TOKEN_KEY, EMAIL_KEY } from '../../../configs/client';
-import { URL_SERVER } from '../../../configs/server';
-import { formatTransaction } from '../../../ultis/transaction';
+import { ACCESS_TOKEN_KEY } from '../../../configs/client';
 import { formatDate } from '../../../ultis/dateFormat';
 
-import * as moment from 'moment';
 
 const FormItem = Form.Item;
 const Search = Input.Search;

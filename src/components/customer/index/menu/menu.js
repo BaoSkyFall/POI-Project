@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Button } from 'antd';
+import { Menu } from 'antd';
 import {
     LogoutOutlined,
     AppstoreOutlined,

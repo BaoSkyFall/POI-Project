@@ -3,11 +3,8 @@ import HeaderPage from './header/header'
 import MenuLeft from './menu/menu';
 import Content from './content/content';
 import './index.css'
-import { Row, Col, notification } from 'antd';
-import jwt from 'jwt-decode';
+import { Row, Col } from 'antd';
 
-import { ACCESS_TOKEN_KEY } from '../../../configs/client';
-const firebase = require("firebase");
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -25,45 +22,10 @@ class Dashboard extends React.Component {
     checkExistNotificationsFirebase = async (walletId) => {
 
         console.log('checkExistNotificationsFirebase Work!: ', walletId)
-        // const notification = await
-        //     firebase
-        //         .firestore()
-        //         .collection('notifications')
-        //         .doc(walletId)
-        //         .get();
-        // console.log('notification exists:', notification.exists)
-        // console.log();
-        // if (!notification.exists) {
-        //     firebase
-        //         .firestore()
-        //         .collection('notifications')
-        //         .doc(walletId)
-        //         .set({
-        //             walletId: walletId,
-        //             listNotify: [],
-        //             isRead: true
-        //         })
-        // }
-        // else {
-        //     firebase
-        //         .firestore()
-        //         .collection('notifications')
-        //         .where('walletId', '==', walletId)
-        //         .onSnapshot(async res => {
-        //             const data = res.docs.map(_doc => _doc.data());
-        //             console.log('data notifications:', data)
-        //             await this.setState({
-        //                 notifications: data[0].listNotify,
-        //                 isRead: data[0].isRead
-        //             });
-        //         })
-        // }
+        
     }
     componentDidMount = () => {
         console.log("componentDidMount work!")
-        let accessToken = localStorage.getItem(ACCESS_TOKEN_KEY)
-        let decoded = jwt(accessToken) || {};
-        // this.checkExistNotificationsFirebase(decoded.walletId?.toString()?? '');
         
 
 

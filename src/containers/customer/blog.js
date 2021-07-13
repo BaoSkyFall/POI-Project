@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import BlogManagement from '../../components/customer/blog/blog';
 import { fetchAllBlog,updateBlog, deleteBlog,addBlog,resetStore,activeBlog} from '../../actions/customer/blog-management';

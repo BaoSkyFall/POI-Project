@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import TripManagement from '../../components/customer/trip/trip';
 import { fetchAllTrip,updateTrip, deleteTrip,addTrip,resetStore } from '../../actions/customer/trip-management';

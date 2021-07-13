@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import UsersManagement from '../../components/customer/users/users';
 import { fetchAllUsers,addUser, updateUser,deleteUser,resetStore } from '../../actions/customer/users-management';
