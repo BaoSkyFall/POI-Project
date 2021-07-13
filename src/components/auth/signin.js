@@ -137,9 +137,9 @@ class SignInForm extends React.Component {
 
                     </FormItem> */}
           <FormItem>
-            <a className="form-signin-forgot" href="forget-password">
+            {/* <a className="form-signin-forgot" href="forget-password">
               Forget password
-            </a>
+            </a> */}
             <Button
               type="primary"
               htmlType="submit"
