@@ -31,7 +31,9 @@ class MenuLeft extends React.Component {
             collapsed: !this.state.collapsed,
         });
     }
-
+    logout =()=>{
+        localStorage.removeItem('accesstoken')
+    }
     render() {
         let pathname = window.location.pathname;
         pathname = pathname.substring(pathname.lastIndexOf('/') + 1);
@@ -178,8 +180,8 @@ class MenuLeft extends React.Component {
                         <span>Blog</span>
                     </Link>
                 </Menu.Item>
-                <Menu.Item key="11" icon={<LogoutOutlined />}>
-                    <Link to="/" >
+                <Menu.Item onClick={()=>{this.logout()}} key="11" icon={<LogoutOutlined />}>
+                    <Link  to="/" >
                         <span>Logout</span>
                     </Link>
                 </Menu.Item>

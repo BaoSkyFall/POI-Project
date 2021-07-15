@@ -4,6 +4,7 @@ import MenuLeft from './menu/menu';
 import Content from './content/content';
 import './index.css'
 import { Row, Col } from 'antd';
+import { browserHistory } from "react-router";
 
 
 class Dashboard extends React.Component {
@@ -13,6 +14,7 @@ class Dashboard extends React.Component {
             collapse: false,
             notifications: null,
             isRead: true,
+            accessToken: localStorage.getItem('accesstoken') || '',
         }
     }
 
@@ -22,38 +24,42 @@ class Dashboard extends React.Component {
     checkExistNotificationsFirebase = async (walletId) => {
 
         console.log('checkExistNotificationsFirebase Work!: ', walletId)
-        
+
     }
     componentDidMount = () => {
         console.log("componentDidMount work!")
-        
-
-
+        console.log('accesstoken index', localStorage.getItem('accesstoken'))
     }
 
     render() {
         let GirdLayout;
-        const { notifications, isRead } = this.state;
+        const { notifications, isRead, accessToken } = this.state;
         console.log('this.props.match.params.type:', this.props.match.params.type)
-        if (this.state.collapse) {
-            GirdLayout = (<Row>
-                <Col span={2}>
-                    <MenuLeft updateCollapse={this.updateCollapse} />
-                </Col>
-                <Col span={22}>
-                    <Content content_type={this.props.match.params.type} />
-                </Col>
-            </Row>);
+        if (accessToken) {
+            if (this.state.collapse) {
+                GirdLayout = (<Row>
+                    <Col span={2}>
+                        <MenuLeft updateCollapse={this.updateCollapse} />
+                    </Col>
+                    <Col span={22}>
+                        <Content content_type={this.props.match.params.type} />
+                    </Col>
+                </Row>);
+            }
+            else {
+                GirdLayout = (<Row>
+                    <Col span={5} className="col-left">
+                        <MenuLeft updateCollapse={this.updateCollapse} />
+                    </Col>
+                    <Col span={18} offset={1} className="col-right">
+                        <Content content_type={this.props.match.params.type} />
+                    </Col>
+                </Row>);
+            }
         }
         else {
-            GirdLayout = (<Row>
-                <Col span={5} className="col-left">
-                    <MenuLeft updateCollapse={this.updateCollapse} />
-                </Col>
-                <Col span={18} offset={1} className="col-right">
-                    <Content content_type={this.props.match.params.type} />
-                </Col>
-            </Row>);
+            localStorage.removeItem('accesstoken')
+            window.location.href= window.location.origin
         }
 
         return (

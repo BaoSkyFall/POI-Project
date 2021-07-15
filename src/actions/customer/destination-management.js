@@ -139,6 +139,7 @@ const addDestination = (accessToken, Destination, image) => {
         return callApi(`api/Destination`, 'POST', Destination, { Authorization: 'Bearer ' + accessToken })
             .then(res => {
                 if (res) {
+                    //Id = res.data
                     console.log('res:', res.data)
                     Destination.destinationId = res.data
                     if (image) {

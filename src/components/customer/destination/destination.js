@@ -163,7 +163,6 @@ class DestinationManagement extends React.Component {
             latitude: values.latitude,
             longtitude: values.longtitude
         }
-        debugger
         this.props.addDestination(this.state.accessToken, values, this.state.imageAdd)
 
     }
@@ -191,7 +190,7 @@ class DestinationManagement extends React.Component {
         this.setState({ visibleAdd: true })
         if (this.formRefAdd.current) {
             this.formRefAdd.current.resetFields()
-            this.setState({ imageAdd: null, imageView: null })
+            this.setState({ imageAdd: null,  imageView: null })
         }
     }
     onDeleteDestination(values) {
